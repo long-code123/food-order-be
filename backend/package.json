@@ -1,9 +1,9 @@
 {
   "name": "food-order-be",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "node index.js",
+    "dev": "node server.js",
     "lint": "prettier --write ."
   },
   "keywords": [],
