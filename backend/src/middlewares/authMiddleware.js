@@ -1,9 +1,18 @@
 const jwt = require('jsonwebtoken');
 const secretKey = 'your_secret_key'; // Thay thế bằng secret key của bạn
 
+const getTokenFrom = (req) => {
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.split(" ")[0] === "Bearer"
+    ) {
+      return req.headers.authorization.split(" ")[1];
+    } 
+    return null;
+  }
 const authMiddleware = (req, res, next) => {
     // Lấy token từ header hoặc query string hoặc cookie
-    const token = req.headers['authorization'] || req.query.token || req.cookies.token;
+    const token = req.headers['authorization'] || req.query.token || req.cookies.token || getTokenFrom(req);
 
     // Kiểm tra xem token có tồn tại không
     if (!token) {
