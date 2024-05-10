@@ -13,8 +13,8 @@ app.use((req, res, next) => {
   next()
 })
 app.use(bodyParser.json())
-app.use(error404Middleware)
-app.use(authMiddleware)
+// app.use(error404Middleware)
+// app.use(authMiddleware)
 
 app.use('/api/v1/foods', router.foodRoutes)
 
