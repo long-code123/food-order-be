@@ -1,25 +1,22 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require('express')
+const bodyParser = require('body-parser')
 
+const error404Middleware = require('./src/middlewares/error404Middleware')
+const authMiddleware = require('./src/middlewares/authMiddleware')
 
-const error404Middleware = require("./src/middlewares/error404Middleware");
-const authMiddleware = require("./src/middlewares/authMiddleware");
+const router = require('./src/routes')
 
-const router = require('./src/routes');
-
-const app = express();
-
-
+const app = express()
 
 app.use((req, res, next) => {
   console.log('Time:', Date.now())
   next()
-});
-app.use(bodyParser.json());
-app.use(error404Middleware);
-app.use(authMiddleware);
+})
+app.use(bodyParser.json())
+app.use(error404Middleware)
+app.use(authMiddleware)
 
-app.use('/api/v1/foods', router.foodRoutes);
+app.use('/api/v1/foods', router.foodRoutes)
 
 // const foods = [
 //     { id: 1, name: 'Burger', price: 10 },
@@ -64,11 +61,9 @@ app.use('/api/v1/foods', router.foodRoutes);
 //     const foodId = parseInt(req.params.id);
 //     const { name, price } = req.body;
 
-    
 //     if (!Number.isInteger(foodId) || foodId <= 0) {
 //         return res.status(400).json({ message: 'Invalid food ID' });
 //     }
-
 
 //     const foundFoodIndex = foods.findIndex(food => food.id === foodId);
 //     if (foundFoodIndex === -1) {
@@ -142,11 +137,9 @@ app.use('/api/v1/foods', router.foodRoutes);
 //     const storeId = parseInt(req.params.id);
 //     const { name, location } = req.body;
 
-    
 //     if (!Number.isInteger(storeId) || storeId <= 0) {
 //         return res.status(400).json({ message: 'Invalid store ID' });
 //     }
-
 
 //     const foundStoreIndex = stores.findIndex(store => store.id === storeId);
 //     if (foundStoreIndex === -1) {
@@ -214,16 +207,14 @@ app.use('/api/v1/foods', router.foodRoutes);
 //     users.push(newUser);
 //     res.status(201).json(newUser);
 //   });
-  
+
 //   app.put('/users/:id',  function(req, res){
 //     const userId = parseInt(req.params.id);
 //     const { name, address } = req.body;
 
-    
 //     if (!Number.isInteger(userId) || userId <= 0) {
 //         return res.status(400).json({ message: 'Invalid user ID' });
 //     }
-
 
 //     const foundUserIndex = users.findIndex(user => user.id === userId);
 //     if (foundUserIndex === -1) {
@@ -262,10 +253,10 @@ app.use('/api/v1/foods', router.foodRoutes);
 //     user_id: 123,
 //     username: 'long'
 //   };
-  
+
 //   // Secret key đã sử dụng để ký và xác minh token ban đầu
 //   const secretKey = 'your_secret_key';
-  
+
 //   // Tạo lại token từ payload đã giải mã và secret key
 //   const newToken = jwt.sign(decodedPayload, secretKey);
 //   console.log(newToken);
@@ -280,9 +271,7 @@ app.use('/api/v1/foods', router.foodRoutes);
 //     console.error(err.message);
 //     res.status(404).send('Something broke!');
 //   });
-  
 
-
-app.listen(3000, function() {
-  console.log('Server is running on port 3000');
-});
+app.listen(3000, function () {
+  console.log('Server is running on port 3000')
+})

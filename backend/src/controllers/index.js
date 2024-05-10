@@ -1,5 +1,5 @@
-const foodController = require('./food.controller');
+const foodController = require('./food.controller')
 
 module.exports = {
-    foodController
+  foodController
 }
