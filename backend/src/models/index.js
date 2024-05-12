@@ -34,6 +34,11 @@ db.payment = require("./payment.model.js")(sequelize, Sequelize);
 db.foodquantity = require("./foodquantity.model.js")(sequelize, Sequelize);
 db.shippers = require("./shipper.model.js")(sequelize, Sequelize);
 db.users = require("./user.model.js")(sequelize, Sequelize);
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
 db.sequelize.authenticate((err) => {
   if (err) {
