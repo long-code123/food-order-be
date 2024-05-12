@@ -1,29 +1,23 @@
 const dbConfig = require("../configs/db.config.js");
 
 module.exports = (sequelize, Sequelize) => {
-    const Foods = sequelize.define("foods", {
-      foodName: {
+    const payment = sequelize.define("payment", {
+      paymentDate: {
         type: Sequelize.STRING
       },
-      price: {
+      totalAmount: {
         type: Sequelize.DOUBLE
       },
-      rating: {
-        type: Sequelize.DOUBLE
-      },
-      description: {
+      paymentMethod: {
         type: Sequelize.STRING
       },
-      foodImage: {
+      paymentStatus: {
         type: Sequelize.STRING
       },
-      categoryId: {
-        type: Sequelize.INTEGER
-      },
-      storeId: {
+      orderId: {
         type: Sequelize.INTEGER
       }
     });
   
-    return Foods;
+    return payment;
   };

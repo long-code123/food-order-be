@@ -1,23 +1,14 @@
 const dbConfig = require("../configs/db.config.js");
 
 module.exports = (sequelize, Sequelize) => {
-    const Foods = sequelize.define("foods", {
-      foodName: {
-        type: Sequelize.STRING
-      },
-      price: {
-        type: Sequelize.DOUBLE
-      },
+    const reviewstore = sequelize.define("reviewstore", {
       rating: {
         type: Sequelize.DOUBLE
       },
-      description: {
+      comment: {
         type: Sequelize.STRING
       },
-      foodImage: {
-        type: Sequelize.STRING
-      },
-      categoryId: {
+      userId: {
         type: Sequelize.INTEGER
       },
       storeId: {
@@ -25,5 +16,5 @@ module.exports = (sequelize, Sequelize) => {
       }
     });
   
-    return Foods;
+    return reviewstore;
   };
