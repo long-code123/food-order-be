@@ -1,26 +1,23 @@
-const dbConfig = require("../configs/db.config.js");
-console.log('abc')
 const Sequelize = require("sequelize");
-// const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-//   host: dbConfig.HOST,
-//   dialect: dbConfig.dialect,
-//   operatorsAliases: false,
 
-//   pool: {
-//     max: dbConfig.pool.max,
-//     min: dbConfig.pool.min,
-//     acquire: dbConfig.pool.acquire,
-//     idle: dbConfig.pool.idle
-//   }
-// })
+
+const dbConfig = require("../configs/db.config.js");
+
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: 'localhost',
-  dialect: 'postgres',
-});
+  host: dbConfig.HOST,
+  dialect: dbConfig.dialect,
+  operatorsAliases: false,
+
+  pool: {
+    max: dbConfig.pool.max,
+    min: dbConfig.pool.min,
+    acquire: dbConfig.pool.acquire,
+    idle: dbConfig.pool.idle
+  }
+})
+
 const db = {};
 
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
 
 db.foods = require("./food.model.js")(sequelize, Sequelize);
 db.categories = require("./category.model.js")(sequelize, Sequelize);
@@ -34,17 +31,16 @@ db.payment = require("./payment.model.js")(sequelize, Sequelize);
 db.foodquantity = require("./foodquantity.model.js")(sequelize, Sequelize);
 db.shippers = require("./shipper.model.js")(sequelize, Sequelize);
 db.users = require("./user.model.js")(sequelize, Sequelize);
+
 Object.keys(db).forEach(modelName => {
+  console.log('modelName', modelName)
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
-db.sequelize.authenticate((err) => {
-  if (err) {
-      console.log("Unable to connect to the database: " + err.message);
-  } else {
-      console.log('Connection has been established successfully.');
-  }
-})
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+
 module.exports = db;

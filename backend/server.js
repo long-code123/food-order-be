@@ -5,7 +5,6 @@ const error404Middleware = require('./src/middlewares/error404Middleware')
 const authMiddleware = require('./src/middlewares/authMiddleware')
 const db = require("./src/models");
 
-console.log('a')
 db.sequelize.authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');
@@ -31,12 +30,12 @@ app.use((req, res, next) => {
   next()
 })
 app.use(bodyParser.json())
-// app.use(error404Middleware)
-// app.use(authMiddleware)
 
 app.use('/api/v1/foods', router.foodRoutes)
 
 
+app.use(error404Middleware)
+app.use(authMiddleware)
 
 app.listen(3000, function () {
   console.log('Server is running on port 3000')

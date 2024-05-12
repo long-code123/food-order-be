@@ -1,4 +1,3 @@
-const dbConfig = require("../configs/db.config.js");
 
 module.exports = (sequelize, Sequelize) => {
   const Foods = sequelize.define("Foods", {
@@ -35,7 +34,7 @@ module.exports = (sequelize, Sequelize) => {
   });
   
   Foods.associate = function(models) {
-    Foods.belongsTo(models.Categories, {
+    Foods.belongsTo(models.categories, {
       foreignKey : 'id',
       targetKey: 'categoryId'
     });
