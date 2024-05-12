@@ -5,6 +5,7 @@ const error404Middleware = require('./src/middlewares/error404Middleware')
 const authMiddleware = require('./src/middlewares/authMiddleware')
 const db = require("./src/models");
 
+console.log('a')
 db.sequelize.authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');
