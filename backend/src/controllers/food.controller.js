@@ -1,8 +1,36 @@
-const foods = [
-  { id: 1, name: 'Burger', price: 10 },
-  { id: 2, name: 'Pizza', price: 12 },
-  { id: 3, name: 'Salad', price: 8 }
-]
+const db = require("../models")
+const Food = db.foods;
+
+const createFood = async (req, res) => {
+  try {
+    // Kiểm tra xem tên món ăn và giá đã được cung cấp hay chưa
+    if (!req.body.foodName || !req.body.price) {
+      return res.status(400).json({ message: "Food name and price are required." });
+    }
+
+    // Tạo một món ăn mới từ dữ liệu trong yêu cầu
+    const newFood = {
+      foodName: req.body.foodName,
+      price: req.body.price,
+      rating: req.body.rating || null,
+      description: req.body.description || null,
+      foodImage: req.body.foodImage || null,
+      categoryId: req.body.categoryId || null,
+      storeId: req.body.storeId || null
+    };
+
+    // Lưu món ăn vào cơ sở dữ liệu
+    const createdFood = await Food.create(newFood);
+
+    // Trả về món ăn đã được tạo
+    res.status(201).json(createdFood);
+    console.log('Create Successfully')
+  } catch (error) {
+    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
+    console.error("Error creating food:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
 const getFoods = async (req, res) => {
   //   app.get('/foods', function (req, res) {
   //     res.json(foods);
@@ -10,77 +38,87 @@ const getFoods = async (req, res) => {
   // sai là tự nhiên app.get chi ở đây đây là chỗ xử lí logic thôi
   // chỗ này k có response kết quả chỉ trả về kết quả
   // tương tự như vậy cho các hàm khác
-  console.log('getFoods')
-  return foods
+  // console.log('getFoods')
+  // return foods
+  try {
+    // Lấy tất cả các món ăn từ cơ sở dữ liệu
+    const allFoods = await Food.findAll();
+
+    res.status(200).json(allFoods);
+  } catch (error) {
+    console.error("Error getting foods:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 const getFoodById = async (req, res) => {
+  const foodId = req.params.id;
+
   try {
-    const foodId = parseInt(req.params.id);
-    const foundFood = foods.find(food => food.id === foodId);
+    const food = await Food.findByPk(foodId);
 
-    if (!foundFood) {
-      return res.status(404).json({ error: 'Food not found' });
-    } else {
-      console.log('get food ' + foodId);
-      return res.json(foundFood); // Em return thẳng foundFood nó load postman k được
+    if (!food) {
+      return res.status(404).json({ message: "Food not found" });
     }
+
+    res.status(200).json(food);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Server Error' }); // Trả về thông báo lỗi tổng quát và mã trạng thái 500
+    console.error("Error getting food by ID:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
-const createFood = async (req, res) => {
-  const { name, price } = req.body;
 
-  if (!name || !price || isNaN(price)) {
-    return res.status(400).json({ message: 'Invalid data' });
-  }
-  const newFood = {
-    id: foods.length + 1,
-    name: name,
-    price: parseFloat(price)
-  };
-  console.log('Create successfully')
-  foods.push(newFood);
-  return res.json(newFood);
-}
 const updateFood = async (req, res) => {
-    const foodId = parseInt(req.params.id)
-    const { name, price } = req.body
+  try {
+    const foodId = req.params.id;
 
-    if (isNaN(foodId) || foodId <= 0) {
-      return res.status(400).json({ message: 'Invalid food ID' })
-    }
-
-    const foundFoodIndex = foods.findIndex((food) => food.id === foodId)
-    if (foundFoodIndex === -1) {
-      return res.status(404).json({ message: 'Food not found' })
+    // Kiểm tra xem món ăn có tồn tại trong cơ sở dữ liệu không
+    const existingFood = await Food.findByPk(foodId);
+    if (!existingFood) {
+      return res.status(404).json({ message: 'Food not found' });
     }
 
-    if (name) {
-      foods[foundFoodIndex].name = name
-    }
-    if (price) {
-      foods[foundFoodIndex].price = price
-    }
-    console.log('Update successfully')
-    return res.json(foods[foundFoodIndex])
+    // Cập nhật thông tin của món ăn từ dữ liệu trong yêu cầu
+    existingFood.foodName = req.body.foodName || existingFood.foodName;
+    existingFood.price = req.body.price || existingFood.price;
+    existingFood.rating = req.body.rating || existingFood.rating;
+    existingFood.description = req.body.description || existingFood.description;
+    existingFood.foodImage = req.body.foodImage || existingFood.foodImage;
+    existingFood.categoryId = req.body.categoryId || existingFood.categoryId;
+    existingFood.storeId = req.body.storeId || existingFood.storeId;
+
+    // Lưu các thay đổi vào cơ sở dữ liệu
+    const updatedFood = await existingFood.save();
+
+    // Trả về món ăn đã được cập nhật
+    res.status(200).json(updatedFood);
+  } catch (error) {
+    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
+    console.error("Error updating food:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
+}
 const deleteFood = async (req, res) => {
-    const foodId = parseInt(req.params.id)
-
-    if (isNaN(foodId) || foodId <= 0) {
-      return res.status(400).json({ message: 'Invalid food ID' })
+  try {
+    const foodId = req.params.id;
+    
+    // Kiểm tra xem món ăn có tồn tại trong cơ sở dữ liệu không
+    const existingFood = await Food.findByPk(foodId);
+    if (!existingFood) {
+        return res.status(404).json({ message: 'Food not found' });
     }
-    const foundFoodIndex = foods.findIndex((food) => food.id === foodId)
-    if (foundFoodIndex === -1) {
-      return res.status(404).json({ message: 'Food not found' })
-    }
-    console.log('Delete successfully')
-    foods.splice(foundFoodIndex, 1)
-    return res.json({ message: 'Food deleted successfully' })
-  }
+    
+    // Xóa món ăn khỏi cơ sở dữ liệu
+    await existingFood.destroy();
+    
+    // Trả về thông báo thành công
+    res.status(200).json({ message: 'Food deleted successfully' });
+} catch (error) {
+    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
+    console.error("Error deleting food:", error);
+    res.status(500).json({ message: "Internal server error" });
+}
+}
 module.exports = {
   getFoods,
   getFoodById,
