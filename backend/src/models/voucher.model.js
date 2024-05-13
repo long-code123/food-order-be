@@ -17,9 +17,19 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         orderId: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            references: {
+              model: 'orders',
+              key: 'orderId', // 'id' refers to column name in fathers table
+           }
         }
     });
+    voucher.associate = function(models) {
+        voucher.belongsTo(models.orders, {
+          foreignKey : 'orderId',
+          targetKey: 'orderId'
+        });
+      };
 
     return voucher;
 };

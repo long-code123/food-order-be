@@ -20,9 +20,19 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         orderId: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            references: {
+                model: 'orders',
+                key: 'orderId', // 'id' refers to column name in fathers table
+            }
         }
     });
+    payment.associate = function (models) {
+        payment.belongsTo(models.orders, {
+            foreignKey: 'orderId',
+            targetKey: 'orderId'
+        });
+    };
 
     return payment;
 };

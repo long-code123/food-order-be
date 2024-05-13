@@ -1,6 +1,6 @@
 
 module.exports = (sequelize, Sequelize) => {
-  const Foods = sequelize.define("Foods", {
+  const Foods = sequelize.define("foods", {
     foodId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -24,19 +24,29 @@ module.exports = (sequelize, Sequelize) => {
     categoryId: {
       type: Sequelize.INTEGER,
       references: {
-        model: 'category',
-        key: 'id', // 'id' refers to column name in fathers table
+        model: 'categories',
+        key: 'categoryId', // 'id' refers to column name in fathers table
      }
     },
     storeId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'stores',
+        key: 'storeId', // 'id' refers to column name in fathers table
+     }
     }
   });
   
   Foods.associate = function(models) {
     Foods.belongsTo(models.categories, {
-      foreignKey : 'id',
+      foreignKey : 'categoryId',
       targetKey: 'categoryId'
+    });
+  };
+  Foods.associate = function(models) {
+    Foods.belongsTo(models.stores, {
+      foreignKey : 'storeId',
+      targetKey: 'storeId'
     });
   };
 

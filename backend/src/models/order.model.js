@@ -1,7 +1,7 @@
 const dbConfig = require("../configs/db.config.js");
 
 module.exports = (sequelize, Sequelize) => {
-    const order = sequelize.define("order", {
+    const orders = sequelize.define("orders", {
         orderId: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -11,12 +11,33 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         userId: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            references: {
+              model: 'users',
+              key: 'userId', // 'id' refers to column name in fathers table
+            }
         },
         shipperId: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            references: {
+              model: 'shippers',
+              key: 'shipperId', // 'id' refers to column name in fathers table
+            }
         }
     });
 
-    return order;
+    orders.associate = function (models) {
+        orders.belongsTo(models.users, {
+            foreignKey: 'userId',
+            targetKey: 'userId'
+        });
+    };
+    orders.associate = function (models) {
+        orders.belongsTo(models.shippers, {
+            foreignKey: 'shipperId',
+            targetKey: 'shipperId'
+        });
+    };
+
+    return orders;
 };
