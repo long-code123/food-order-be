@@ -35,6 +35,7 @@ app.use('/api/v1/foods', router.foodRoutes)
 app.use('/api/v1/categories', router.categoryRoutes)
 app.use('/api/v1/stores', router.storeRoutes)
 app.use('/api/v1/users', router.userRoutes)
+app.use('/api/v1/shippers', router.shipperRoutes)
 
 
 app.use(error404Middleware)
