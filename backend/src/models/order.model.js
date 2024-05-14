@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
-        deleveryTime: {
+        deliveryTime: {
             type: Sequelize.STRING
         },
         userId: {
