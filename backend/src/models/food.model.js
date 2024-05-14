@@ -26,26 +26,26 @@ module.exports = (sequelize, Sequelize) => {
       references: {
         model: 'categories',
         key: 'categoryId', // 'id' refers to column name in fathers table
-     }
+      }
     },
     storeId: {
       type: Sequelize.INTEGER,
       references: {
         model: 'stores',
         key: 'storeId', // 'id' refers to column name in fathers table
-     }
+      }
     }
   });
-  
-  Foods.associate = function(models) {
+
+  Foods.associate = function (models) {
     Foods.belongsTo(models.categories, {
-      foreignKey : 'categoryId',
+      foreignKey: 'categoryId',
       targetKey: 'categoryId'
     });
   };
-  Foods.associate = function(models) {
+  Foods.associate = function (models) {
     Foods.belongsTo(models.stores, {
-      foreignKey : 'storeId',
+      foreignKey: 'storeId',
       targetKey: 'storeId'
     });
   };

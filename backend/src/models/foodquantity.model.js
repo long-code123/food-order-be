@@ -10,16 +10,16 @@ module.exports = (sequelize, Sequelize) => {
         orderId: {
             type: Sequelize.INTEGER,
             references: {
-              model: 'orders',
-              key: 'orderId', // 'id' refers to column name in fathers table
-           }
+                model: 'orders',
+                key: 'orderId', // 'id' refers to column name in fathers table
+            }
         },
         foodId: {
             type: Sequelize.INTEGER,
             references: {
-              model: 'foods',
-              key: 'foodId', // 'id' refers to column name in fathers table
-           }
+                model: 'foods',
+                key: 'foodId', // 'id' refers to column name in fathers table
+            }
         },
         quantity: {
             type: Sequelize.INTEGER
