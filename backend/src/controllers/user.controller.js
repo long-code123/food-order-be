@@ -1,11 +1,14 @@
 const db = require("../models")
+const bcrypt = require('bcrypt')
 const User = db.users;
+
 
 const createUser = async (req, res) => {
     try {
         if (!req.body.userName || !req.body.phoneNumber || !req.body.address || !req.body.password ) {
             return res.status(400).json({ message: "Name, phone number, address and password are required." })
         }
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const newUser = {
             userName: req.body.userName,
             userImage: req.body.userImage,
@@ -13,7 +16,7 @@ const createUser = async (req, res) => {
             phoneNumber: req.body.phoneNumber,
             email: req.body.email,
             address: req.body.address,
-            password: req.body.password,
+            password: hashedPassword,
 
         };
         const createUser = await User.create(newUser);
@@ -26,7 +29,9 @@ const createUser = async (req, res) => {
 }
 const getUsers = async (req, res) => {
     try {
-        const allUsers = await User.findAll();
+        const allUsers = await User.findAll({
+            attributes: { exclude: ['password'] } // Loại bỏ trường password
+        });
 
         res.status(200).json(allUsers);
     } catch (error) {
@@ -37,7 +42,9 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
     const userId = req.params.id;
     try {
-        const user = await User.findByPk(userId);
+        const user = await User.findByPk(userId, {
+            attributes: { exclude: ['password'] }
+        });
         if (!user) {
             return res.status(404).json({ message: "User not found" })
         }
