@@ -9,6 +9,7 @@ const paymentRoutes = require('./payment.route')
 const reviewfoodRoutes = require('./reviewfood.route')
 const reviewshipperRoutes = require('./reviewshipper.route')
 const reviewstoreRoutes = require('./reviewstore.route')
+const foodquantityRoutes = require('./foodquantity.route')
 
 module.exports = {
   foodRoutes,
@@ -22,4 +23,5 @@ module.exports = {
   reviewfoodRoutes,
   reviewshipperRoutes,
   reviewstoreRoutes,
+  foodquantityRoutes
 }
