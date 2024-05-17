@@ -1,12 +1,8 @@
 const express = require('express')
-
 const router = express.Router()
 const foodController = require('../controllers/food.controller')
+// const cacheMiddleware = require('../middlewares/redisMiddleware')
 
-// router.get('/', async (req, res) => {
-//   let data = await foodController.getFoods()
-//   res.json(data)
-// })
 router.get('/', foodController.getFoods)
 router.get('/:id', foodController.getFoodById)
 router.post('/', foodController.createFood)

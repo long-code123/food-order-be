@@ -8,10 +8,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: nguyenbalong
     ports:
-      - "5432:5432"  # Forward PostgreSQL port to host machine
+      - "5432:5432" # Forward PostgreSQL port to host 
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=nguyenbalong@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=nguyenbalong
+    ports:
+      - "5050:80"
 
   food-order-be:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     ports:
@@ -22,3 +29,14 @@ services:
       POSTGRES_DB: food_app
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: nguyenbalong
+  # redis:
+  #   image: redis:latest
+  #   ports:
+  #     - "6379:6379" # Forward Redis port to host machine
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+  #   ports:
+  #     - "9200:9200"  # Forward Elasticsearch HTTP port to host machine
+  #     - "9300:9300"  # Forward Elasticsearch TCP transport port to host machine
+  #   environment:
+  #     - discovery.seed_hosts=node1,node2
