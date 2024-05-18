@@ -3,23 +3,25 @@ const bodyParser = require('body-parser')
 
 const error404Middleware = require('./src/middlewares/error404Middleware')
 const authMiddleware = require('./src/middlewares/authMiddleware')
-const db = require("./src/models");
+const db = require('./src/models')
 
-db.sequelize.authenticate()
+db.sequelize
+  .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log('Connection has been established successfully.')
   })
   .catch((err) => {
-    console.log("Unable to connect to the database: " + err.message);
-  });
+    console.log('Unable to connect to the database: ' + err.message)
+  })
 
-db.sequelize.sync()
+db.sequelize
+  .sync()
   .then(() => {
-    console.log("Synced db.");
+    console.log('Synced db.')
   })
   .catch((err) => {
-    console.log("Failed to sync db: " + err.message);
-  });
+    console.log('Failed to sync db: ' + err.message)
+  })
 
 const router = require('./src/routes')
 
