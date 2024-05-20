@@ -20,4 +20,4 @@ jobs:
         run: |
           cd backend
           npm install
-          npm run prettier
+          npm run lint
