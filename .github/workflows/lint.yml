@@ -8,7 +8,7 @@ on:
       - 'feature/**'
 jobs:
   check-format-code:
-    runs-on: self-hosted-cpu
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
