@@ -46,10 +46,11 @@ app.use('/api/v1/reviewshippers', router.reviewshipperRoutes)
 app.use('/api/v1/reviewstores', router.reviewstoreRoutes)
 app.use('/api/v1/foodquantities', router.foodquantityRoutes)
 app.use('/api/v1/login', router.loginRoutes)
+app.use('/api/v1/admin', router.adminRoutes)
 
 app.use(error404Middleware)
 app.use(authMiddleware)
 
-app.listen(3000, function () {
-  console.log('Server is running on port 3000')
+app.listen(8000, function () {
+  console.log('Server is running on port 8000')
 })
