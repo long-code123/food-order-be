@@ -26,4 +26,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
+    - name: Prettier 
+      run: |
+        cd backend
+        npm install
+        npm run lint
