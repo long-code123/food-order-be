@@ -4,6 +4,9 @@ const bodyParser = require('body-parser')
 const error404Middleware = require('./src/middlewares/error404Middleware')
 const authMiddleware = require('./src/middlewares/authMiddleware')
 const db = require('./src/models')
+const cors = require('cors');
+
+
 
 db.sequelize
   .authenticate()
@@ -32,6 +35,7 @@ app.use((req, res, next) => {
   next()
 })
 app.use(bodyParser.json())
+app.use(cors());
 
 app.use('/api/v1/foods', router.foodRoutes)
 app.use('/api/v1/categories', router.categoryRoutes)
