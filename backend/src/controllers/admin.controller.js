@@ -44,10 +44,10 @@ const adminLogin = async (req, res) => {
 
     const token = jwt.sign({ adminId: admin.id, role: admin.role }, secretKey, { expiresIn: '1h' })
     // Thêm token vào header "Authorization" của phản hồi
-    res.setHeader('Authorization', `Bearer ${token}`)
+    // res.setHeader('Authorization', `Bearer ${token}`)
 
     // Trả về phản hồi với token
-    res.status(200).json({ token })
+    res.json({ token })
   } catch (error) {
     console.error('Error:', error)
     res.status(500).json({ message: 'Internal server error' })

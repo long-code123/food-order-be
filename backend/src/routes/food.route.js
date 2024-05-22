@@ -5,10 +5,10 @@ const cacheMiddleware = require('../middlewares/redisMiddleware')
 const authorizeMiddleware = require('../middlewares/authorizeMiddleware')
 const authMiddleware = require('../middlewares/authMiddleware')
 
-router.get('/', authMiddleware, foodController.getFoods)
-router.get('/:id', authorizeMiddleware(['super admin']), foodController.getFoodById)
-router.post('/', foodController.createFood)
-router.put('/:id', foodController.updateFood)
-router.delete('/:id', foodController.deleteFood)
+router.get('/', authMiddleware, authorizeMiddleware(['super admin', 'admin']), foodController.getFoods)
+router.get('/:id',authMiddleware, authorizeMiddleware(['super admin', 'admin']), foodController.getFoodById)
+router.post('/', authMiddleware, authorizeMiddleware(['super admin']), foodController.createFood)
+router.put('/:id', authMiddleware, authorizeMiddleware(['super admin']), foodController.updateFood)
+router.delete('/:id', authMiddleware, authorizeMiddleware(['super admin']), foodController.deleteFood)
 
 module.exports = router
