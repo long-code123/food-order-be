@@ -5,15 +5,16 @@ const error404Middleware = require('./src/middlewares/error404Middleware')
 const authMiddleware = require('./src/middlewares/authMiddleware')
 const db = require('./src/models')
 const cors = require('cors')
+const loggers = require('./src/utils/logger.utils')
 
-db.sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.')
-  })
-  .catch((err) => {
-    console.log('Unable to connect to the database: ' + err.message)
-  })
+const router = require('./src/routes')
+
+const app = express()
+
+app.use((req, res, next) => {
+  console.log('Time:', Date.now())
+  next()
+})
 
 db.sequelize
   .sync()
@@ -24,17 +25,10 @@ db.sequelize
     console.log('Failed to sync db: ' + err.message)
   })
 
-const router = require('./src/routes')
-
-const app = express()
-
-app.use((req, res, next) => {
-  console.log('Time:', Date.now())
-  next()
-})
 app.use(bodyParser.json())
 app.use(cors())
 
+// Define api routes to use for mobile app
 app.use('/api/v1/foods', router.foodRoutes)
 app.use('/api/v1/categories', router.categoryRoutes)
 app.use('/api/v1/stores', router.storeRoutes)
@@ -48,11 +42,14 @@ app.use('/api/v1/reviewshippers', router.reviewshipperRoutes)
 app.use('/api/v1/reviewstores', router.reviewstoreRoutes)
 app.use('/api/v1/foodquantities', router.foodquantityRoutes)
 app.use('/api/v1/login', router.loginRoutes)
+
+// Define cms routes to use for cms admin
+
 app.use('/api/v1/admin', router.adminRoutes)
 
 app.use(error404Middleware)
 app.use(authMiddleware)
 
 app.listen(8000, function () {
-  console.log('Server is running on port 8000')
+  loggers.info('Server is running on port 8000')
 })

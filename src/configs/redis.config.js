@@ -1,5 +1,4 @@
 require('dotenv').config()
-process.env.PORT
 
 module.exports = {
   redis: {

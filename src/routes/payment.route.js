@@ -4,7 +4,6 @@ const paymentController = require('../controllers/payment.controller')
 const authorizeMiddleware = require('../middlewares/authorizeMiddleware')
 const authMiddleware = require('../middlewares/authMiddleware')
 
-
 router.get('/', authMiddleware, authorizeMiddleware(['super admin', 'admin']), paymentController.getPayments)
 router.get('/:id', authMiddleware, authorizeMiddleware(['super admin', 'admin']), paymentController.getPaymentById)
 router.post('/', paymentController.createPayment)

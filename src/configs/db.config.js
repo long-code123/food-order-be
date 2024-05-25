@@ -1,7 +1,6 @@
 require('dotenv').config()
 process.env.PORT
 
-console.log(process.env)
 module.exports = {
   HOST: process.env.DB_HOST,
   USER: process.env.DB_USER,

@@ -2,12 +2,10 @@ const Sequelize = require('sequelize')
 
 const dbConfig = require('../configs/db.config.js')
 
-console.log(dbConfig)
-
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
-  operatorsAliases: false,
+  // operatorsAliases: false,
 
   pool: {
     max: dbConfig.pool.max,
