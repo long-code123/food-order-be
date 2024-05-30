@@ -11,6 +11,7 @@ const createPayment = async (req, res) => {
       totalAmount: req.body.totalAmount,
       paymentMethod: req.body.paymentMethod,
       paymentStatus: req.body.paymentStatus,
+      storeId: req.body.storeId || null,
       orderId: req.body.orderId || null
     }
     const createdPayment = await Payment.create(newPayment)
@@ -61,6 +62,7 @@ const updatePayment = async (req, res) => {
     existingPayment.totalAmount = req.body.totalAmount || existingPayment.totalAmount
     existingPayment.paymentMethod = req.body.paymentMethod || existingPayment.paymentMethod
     existingPayment.paymentStatus = req.body.paymentStatus || existingPayment.paymentStatus
+    existingPayment.storeId = req.body.storeId || existingPayment.storeId
     existingPayment.orderId = req.body.orderId || existingPayment.orderId
     const updatedPayment = await existingPayment.save()
     res.status(200).json(updatedPayment)
@@ -89,10 +91,29 @@ const deletePayment = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
+const getPaymentsByStore = async (req, res) => {
+  try {
+    const storeId = req.params.id;
+    if(!storeId) {
+      return res.status(400).json({ message: 'Invalid shipperId'})
+    }
+    const payments = await Payment.findAll({ where: {storeId}});
+    if(payments.length === 0) {
+      return res.status(404).json({ message: 'No Payments for store'});
+    } 
+    res.status(200).json(payments);
+  } catch {
+    console.error('Error fetching Payments by store: ', error);
+    res.status(500).json({ message: 'Internal server error'})
+  }
+}
+
 module.exports = {
   getPayments,
   getPaymentById,
   createPayment,
   updatePayment,
-  deletePayment
+  deletePayment,
+  getPaymentsByStore
 }

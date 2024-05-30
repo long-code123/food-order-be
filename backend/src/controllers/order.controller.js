@@ -85,10 +85,29 @@ const deleteOrder = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
+const getOrderByShipper = async (req, res) => {
+  try {
+    const shipperId = req.params.id;
+    if(!shipperId) {
+      return res.status(400).json({ message: 'Invalid shipperId'})
+    }
+    const orders = await Order.findAll({ where: {shipperId}});
+    if(orders.length === 0) {
+      return res.status(404).json({ message: 'No order for shipper'});
+    } 
+    res.status(200).json(orders);
+  } catch {
+    console.error('Error fetching Orders by shipper: ', error);
+    res.status(500).json({ message: 'Internal server error'})
+  }
+}
+
 module.exports = {
   getOrders,
   getOrderById,
   createOrder,
   updateOrder,
-  deleteOrder
+  deleteOrder,
+  getOrderByShipper
 }
