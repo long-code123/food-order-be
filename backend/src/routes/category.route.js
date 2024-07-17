@@ -5,7 +5,7 @@ const authorizeMiddleware = require('../middlewares/authorizeMiddleware')
 const authMiddleware = require('../middlewares/authMiddleware')
 const foodController = require('../controllers/food.controller')
 
-router.get('/', authMiddleware, authorizeMiddleware(['super admin', 'admin']), categoryController.getCategories)
+router.get('/', categoryController.getCategories)
 router.get('/:id', authMiddleware, authorizeMiddleware(['super admin', 'admin']), categoryController.getCategoryById)
 router.post('/', authMiddleware, authorizeMiddleware(['super admin']), categoryController.createCategory)
 router.put('/:id', authMiddleware, authorizeMiddleware(['super admin']), categoryController.updateCategory)

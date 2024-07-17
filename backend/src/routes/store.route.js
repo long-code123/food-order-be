@@ -7,7 +7,7 @@ const authMiddleware = require('../middlewares/authMiddleware')
 const reviewstoreController = require('../controllers/reviewstore.controller')
 const paymentController = require('../controllers/payment.controller')
 
-router.get('/', authMiddleware, authorizeMiddleware(['super admin', 'admin']), storeController.getStores)
+router.get('/', storeController.getStores)
 router.get('/:id', authMiddleware, authorizeMiddleware(['super admin', 'admin']), storeController.getStoreById)
 router.post('/', authMiddleware, authorizeMiddleware(['super admin']), storeController.createStore)
 router.put('/:id', authMiddleware, authorizeMiddleware(['super admin']), storeController.updateStore)

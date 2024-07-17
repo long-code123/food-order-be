@@ -11,33 +11,33 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       references: {
         model: 'orders',
-        key: 'orderId' // 'id' refers to column name in fathers table
+        key: 'orderId'
       }
     },
     foodId: {
       type: Sequelize.INTEGER,
       references: {
         model: 'foods',
-        key: 'foodId' // 'id' refers to column name in fathers table
+        key: 'foodId'
       }
     },
     quantity: {
       type: Sequelize.INTEGER
     }
-  })
+  });
 
   foodquantity.associate = function (models) {
     foodquantity.belongsTo(models.foods, {
       foreignKey: 'foodId',
-      targetKey: 'foodId'
-    })
-  }
-  foodquantity.associate = function (models) {
+      targetKey: 'foodId',
+      as: 'food'
+    });
     foodquantity.belongsTo(models.orders, {
       foreignKey: 'orderId',
-      targetKey: 'orderId'
-    })
-  }
+      targetKey: 'orderId',
+      as: 'order'
+    });
+  };
 
-  return foodquantity
-}
+  return foodquantity;
+};

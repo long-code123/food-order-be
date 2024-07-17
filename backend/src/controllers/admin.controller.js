@@ -108,6 +108,8 @@ const adminLogin = async (req, res) => {
   try {
     const { adminName, password } = req.body;
 
+    console.log(adminName + password);
+
     const admin = await Admin.findOne({ where: { adminName: adminName } });
 
     if (!admin) {
@@ -136,6 +138,7 @@ const getCurrentAdmin = async (req, res) => {
     if (!admin) {
       return res.status(404).json({ message: 'Admin not found' });
     }
+    console.log(admin);
     res.json({ id: admin.id, adminName: admin.adminName, role: admin.role, email: admin.email });
   } catch (error) {
     console.error('Error:', error);
