@@ -26,14 +26,27 @@ const login = async (req, res) => {
     }
 
     // Tạo mã JWT
-    const token = jwt.sign({ userId: user.userId, userName: user.userName }, secretKey, { expiresIn: '1h' })
+    const token = jwt.sign({ userId: user.userId, userName: user.userName, userImage: user.userImage, dateOfBirth: user.dateOfBirth, phoneNumber: user.phoneNumber, email : user.email, address: user.address }, secretKey, { expiresIn: '1h' })
 
     // Gửi mã JWT về client
-    res.json({ token })
+    res.json({ token, user: {userId: user.userId, userName: user.userName, userImage: user.userImage, dateOfBirth: user.dateOfBirth, phoneNumber: user.phoneNumber, email : user.email, address: user.address } })
   } catch (error) {
     console.error('Error:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 }
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = req.user;
+    console.log(user);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({userId: user.userId, userName: user.userName, userImage: user.userImage, dateOfBirth: user.dateOfBirth, phoneNumber: user.phoneNumber, email : user.email, address: user.address});
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
-module.exports = { login }
+module.exports = { login, getCurrentUser}

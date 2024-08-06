@@ -19,6 +19,13 @@ module.exports = (sequelize, Sequelize) => {
     paymentStatus: {
       type: Sequelize.STRING
     },
+    storeId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'stores',
+        key: 'storeId' // 'id' refers to column name in fathers table
+      }
+    },
     orderId: {
       type: Sequelize.INTEGER,
       references: {
@@ -31,6 +38,12 @@ module.exports = (sequelize, Sequelize) => {
     payment.belongsTo(models.orders, {
       foreignKey: 'orderId',
       targetKey: 'orderId'
+    })
+  }
+  payment.associate = function (models) {
+    payment.belongsTo(models.stores, {
+      foreignKey: 'storeId',
+      targetKey: 'storeId'
     })
   }
 

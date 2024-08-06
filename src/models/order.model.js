@@ -1,5 +1,3 @@
-const dbConfig = require('../configs/db.config.js')
-
 module.exports = (sequelize, Sequelize) => {
   const orders = sequelize.define('orders', {
     orderId: {
@@ -14,30 +12,37 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       references: {
         model: 'users',
-        key: 'userId' // 'id' refers to column name in fathers table
+        key: 'userId'
       }
     },
     shipperId: {
       type: Sequelize.INTEGER,
       references: {
         model: 'shippers',
-        key: 'shipperId' // 'id' refers to column name in fathers table
+        key: 'shipperId'
       }
+    },
+    status: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: 'pending' 
     }
-  })
+  });
 
   orders.associate = function (models) {
     orders.belongsTo(models.users, {
       foreignKey: 'userId',
       targetKey: 'userId'
-    })
-  }
-  orders.associate = function (models) {
+    });
     orders.belongsTo(models.shippers, {
       foreignKey: 'shipperId',
       targetKey: 'shipperId'
-    })
-  }
+    });
+    orders.hasMany(models.foodquantity, {
+      foreignKey: 'orderId',
+      as: 'items'
+    });
+  };
 
-  return orders
-}
+  return orders;
+};

@@ -10,11 +10,7 @@ const getTokenFrom = (req) => {
 
 const authMiddleware = (req, res, next) => {
   // Lấy token từ header hoặc query string hoặc cookie
-  const token =
-    req.headers['authorization'].split(' ')[1] ||
-    req.query.token.split(' ')[1] ||
-    req.cookies.token.split(' ')[1] ||
-    getTokenFrom(req)
+  const token = req.headers['authorization'].split(' ')[1] || req.query.token.split(' ')[1] || req.cookies.token.split(' ')[1] || getTokenFrom(req)
   // Log token đã được lấy
   console.log(req.headers['authorization'].split(' ')[1])
   console.log('Token:', token)
@@ -25,7 +21,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    // Xác minh tính hợp lệ của token và lấy thông tin payload
+    // Xác minh tính hợp lệ của token và lấy thông tin payload  
     const decoded = jwt.verify(token, secretKey)
 
     // Gắn thông tin người dùng vào đối tượng request để sử dụng trong các xử lý tiếp theo
