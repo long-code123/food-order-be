@@ -100,10 +100,10 @@ const updateUserByUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
     if (req.body.password) {
-      const passwordMatch = await bcrypt.compare(req.body.password, existingUser.password);
+      const passwordMatch = await bcrypt.compare(req.body.password, existingUser.password)
       if (!passwordMatch) {
         // Nếu mật khẩu mới không khớp với mật khẩu hiện tại, hash mật khẩu mới
-        existingUser.password = await bcrypt.hash(req.body.password, 10);
+        existingUser.password = await bcrypt.hash(req.body.password, 10)
       }
     }
     existingUser.userName = req.body.userName || existingUser.userName
@@ -112,7 +112,7 @@ const updateUserByUser = async (req, res) => {
     existingUser.phoneNumber = req.body.phoneNumber || existingUser.phoneNumber
     existingUser.email = req.body.email || existingUser.email
     existingUser.address = req.body.address || existingUser.address
-    
+
     const updateUser = await existingUser.save()
 
     res.status(200).json(updateUser)

@@ -2,8 +2,7 @@ const express = require('express')
 
 const router = express.Router()
 const loginController = require('../controllers/login.controller')
-const authMiddleware = require('../middlewares/authMiddleware')
-
+const authMiddleware = require('../../middlewares/authMiddleware')
 
 router.post('/', loginController.login)
 router.get('/me', authMiddleware, loginController.getCurrentUser)

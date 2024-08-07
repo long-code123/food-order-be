@@ -123,37 +123,37 @@ const deleteFood = async (req, res) => {
 }
 const getFoodsByStore = async (req, res) => {
   try {
-    const storeId = req.params.id;
-    console.log(storeId);
+    const storeId = req.params.id
+    console.log(storeId)
     if (!storeId) {
-      return res.status(400).json({ message: 'Invalid storeId' });
+      return res.status(400).json({ message: 'Invalid storeId' })
     }
-    
-    const foods = await Food.findAll({ where: { storeId } });
+
+    const foods = await Food.findAll({ where: { storeId } })
     if (foods.length === 0) {
-      return res.status(404).json({ message: 'No foods found for this store' });
+      return res.status(404).json({ message: 'No foods found for this store' })
     }
-    res.status(200).json(foods);
+    res.status(200).json(foods)
   } catch (error) {
-    console.error('Error fetching foods by store:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error fetching foods by store:', error)
+    res.status(500).json({ message: 'Internal server error' })
   }
-};
+}
 
 const getFoodsByCategory = async (req, res) => {
-  try{
-    const categoryId = req.params.id;
-    if(!categoryId) {
-      return res.status(400).json({ message: 'Invalid categoryId'});
+  try {
+    const categoryId = req.params.id
+    if (!categoryId) {
+      return res.status(400).json({ message: 'Invalid categoryId' })
     }
-    const foods = await Food.findAll({ where: { categoryId } });
+    const foods = await Food.findAll({ where: { categoryId } })
     if (foods.length === 0) {
-      return res.status(404).json({ message: 'No foods found for this store' });
+      return res.status(404).json({ message: 'No foods found for this store' })
     }
-    res.status(200).json(foods);
+    res.status(200).json(foods)
   } catch {
-    console.error('Error fetching foods by category:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error fetching foods by category:', error)
+    res.status(500).json({ message: 'Internal server error' })
   }
 }
 

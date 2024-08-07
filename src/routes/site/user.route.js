@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const userController = require('../controllers/user.controller')
-const authorizeMiddleware = require('../middlewares/authorizeMiddleware')
-const authMiddleware = require('../middlewares/authMiddleware')
+const authorizeMiddleware = require('../../middlewares/authorizeMiddleware')
+const authMiddleware = require('../../middlewares/authMiddleware')
 const orderController = require('../controllers/order.controller')
 
 router.get('/', authMiddleware, authorizeMiddleware(['super admin', 'admin']), userController.getUsers)

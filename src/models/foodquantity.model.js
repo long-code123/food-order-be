@@ -24,20 +24,20 @@ module.exports = (sequelize, Sequelize) => {
     quantity: {
       type: Sequelize.INTEGER
     }
-  });
+  })
 
   foodquantity.associate = function (models) {
     foodquantity.belongsTo(models.foods, {
       foreignKey: 'foodId',
       targetKey: 'foodId',
       as: 'food'
-    });
+    })
     foodquantity.belongsTo(models.orders, {
       foreignKey: 'orderId',
       targetKey: 'orderId',
       as: 'order'
-    });
-  };
+    })
+  }
 
-  return foodquantity;
-};
+  return foodquantity
+}

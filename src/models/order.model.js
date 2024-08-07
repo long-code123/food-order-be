@@ -25,24 +25,24 @@ module.exports = (sequelize, Sequelize) => {
     status: {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: 'pending' 
+      defaultValue: 'pending'
     }
-  });
+  })
 
   orders.associate = function (models) {
     orders.belongsTo(models.users, {
       foreignKey: 'userId',
       targetKey: 'userId'
-    });
+    })
     orders.belongsTo(models.shippers, {
       foreignKey: 'shipperId',
       targetKey: 'shipperId'
-    });
+    })
     orders.hasMany(models.foodquantity, {
       foreignKey: 'orderId',
       as: 'items'
-    });
-  };
+    })
+  }
 
-  return orders;
-};
+  return orders
+}

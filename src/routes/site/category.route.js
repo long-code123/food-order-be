@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const categoryController = require('../controllers/category.controller')
-const authorizeMiddleware = require('../middlewares/authorizeMiddleware')
-const authMiddleware = require('../middlewares/authMiddleware')
+const authorizeMiddleware = require('../../middlewares/authorizeMiddleware')
+const authMiddleware = require('../../middlewares/authMiddleware')
 const foodController = require('../controllers/food.controller')
 
 router.get('/', categoryController.getCategories)

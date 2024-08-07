@@ -8,6 +8,8 @@ const cors = require('cors')
 const loggers = require('./src/utils/logger.utils')
 
 const router = require('./src/routes')
+const siteRouter = require('./src/routes/site')
+const apiRouter = require('./src/routes/api')
 
 const app = express()
 
@@ -28,6 +30,8 @@ db.sequelize
 app.use(bodyParser.json())
 app.use(cors())
 
+// define api routes to use for mobile app
+
 // Define api routes to use for mobile app
 app.use('/api/v1/foods', router.foodRoutes)
 app.use('/api/v1/categories', router.categoryRoutes)
@@ -43,12 +47,13 @@ app.use('/api/v1/reviewstores', router.reviewstoreRoutes)
 app.use('/api/v1/foodquantities', router.foodquantityRoutes)
 app.use('/api/v1/login', router.loginRoutes)
 
+// define site routes to use for cms admin
+
 // Define cms routes to use for cms admin
 
 app.use('/api/v1/admin', router.adminRoutes)
 
 app.use(error404Middleware)
-app.use(authMiddleware)
 
 app.listen(8000, function () {
   loggers.info('Server is running on port 8000')
