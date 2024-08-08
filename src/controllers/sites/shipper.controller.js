@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const bcrypt = require('bcrypt')
 const Shipper = db.shippers
 
@@ -92,7 +92,7 @@ const deleteShipper = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-module.exports = {
+export default {
   createShipper,
   getShippers,
   getShipperById,

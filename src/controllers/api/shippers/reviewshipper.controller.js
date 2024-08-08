@@ -100,7 +100,7 @@ const getReviewsByShipper = async (req, res) => {
       return res.status(404).json({ message: 'No reviews for shipper' })
     }
     res.status(200).json(reviews)
-  } catch {
+  } catch (error) {
     console.error('Error fetching Reviews by shipper: ', error)
     res.status(500).json({ message: 'Internal server error' })
   }

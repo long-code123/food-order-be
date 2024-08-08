@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Order = db.orders
 const FoodQuantity = db.foodquantity
 
@@ -14,7 +14,6 @@ const createOrder = async (req, res) => {
     }
     const createdOrder = await Order.create(newOrder)
     res.status(201).json(createdOrder)
-    console.log('Create Successfully')
   } catch (error) {
     // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
     console.error('Error creating order:', error)

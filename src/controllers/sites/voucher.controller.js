@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Voucher = db.voucher
 
 const createVoucher = async (req, res) => {
@@ -88,7 +88,7 @@ const deleteVoucher = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-module.exports = {
+export default {
   getVouchers,
   getVoucherById,
   createVoucher,

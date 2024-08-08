@@ -15,8 +15,7 @@ const getFoods = async (req, res) => {
     if (checkOk === 'OK') {
       console.log('Data saved to Redis:', allFoods)
     }
-
-    res.status(200).json(allFoods)
+    res.status(200).json({allFoods})
   } catch (error) {
     console.error('Error getting foods:', error)
     res.status(500).json({ message: 'Internal server error' })
@@ -120,8 +119,9 @@ const getFoodsByCategory = async (req, res) => {
     if (foods.length === 0) {
       return res.status(404).json({ message: 'No foods found for this store' })
     }
-    res.status(200).json(foods)
-  } catch {
+    res.status(200).json({foods})
+    
+  } catch (error) {
     console.error('Error fetching foods by category:', error)
     res.status(500).json({ message: 'Internal server error' })
   }
@@ -130,7 +130,6 @@ const getFoodsByCategory = async (req, res) => {
 module.exports = {
   getFoods,
   getFoodById,
-  createFood,
   updateFood,
   deleteFood,
   getFoodsByStore,

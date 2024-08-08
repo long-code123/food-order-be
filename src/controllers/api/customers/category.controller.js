@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Category = db.categories
 
 const getCategories = async (req, res) => {

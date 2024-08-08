@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Category = db.categories
 
 const createCategory = async (req, res) => {
@@ -76,7 +76,7 @@ const deleteCategory = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-module.exports = {
+export default {
   createCategory,
   getCategories,
   getCategoryById,

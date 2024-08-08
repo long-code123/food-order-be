@@ -1,7 +1,8 @@
-const db = require('../models')
+import db from '@src/models'
+import config from '@src/configs/redis.config'
+import Redis from 'ioredis'
+
 const Food = db.foods
-const config = require('../configs/redis.config')
-const Redis = require('ioredis')
 const redis = new Redis(config)
 
 const createFood = async (req, res) => {
@@ -34,6 +35,7 @@ const createFood = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
 const getFoods = async (req, res) => {
   try {
     // Lấy tất cả các món ăn từ cơ sở dữ liệu
@@ -100,6 +102,7 @@ const updateFood = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
 const deleteFood = async (req, res) => {
   try {
     const foodId = req.params.id
@@ -121,6 +124,7 @@ const deleteFood = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
 const getFoodsByStore = async (req, res) => {
   try {
     const storeId = req.params.id
@@ -151,13 +155,13 @@ const getFoodsByCategory = async (req, res) => {
       return res.status(404).json({ message: 'No foods found for this store' })
     }
     res.status(200).json(foods)
-  } catch {
+  } catch (error) {
     console.error('Error fetching foods by category:', error)
     res.status(500).json({ message: 'Internal server error' })
   }
 }
 
-module.exports = {
+export default {
   getFoods,
   getFoodById,
   createFood,

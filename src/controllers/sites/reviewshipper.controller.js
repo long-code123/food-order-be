@@ -1,5 +1,5 @@
 const { where } = require('sequelize')
-const db = require('../models')
+import db from '@src/models'
 const Reviewshipper = db.reviewshipper
 
 const createReviewshipper = async (req, res) => {
@@ -89,6 +89,7 @@ const deleteReviewshipper = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
 const getReviewsByShipper = async (req, res) => {
   try {
     const shipperId = req.params.id
@@ -100,13 +101,13 @@ const getReviewsByShipper = async (req, res) => {
       return res.status(404).json({ message: 'No reviews for shipper' })
     }
     res.status(200).json(reviews)
-  } catch {
+  }catch (error) {
     console.error('Error fetching Reviews by shipper: ', error)
     res.status(500).json({ message: 'Internal server error' })
   }
 }
 
-module.exports = {
+export default {
   getReviewshippers,
   getReviewshipperById,
   createReviewshipper,

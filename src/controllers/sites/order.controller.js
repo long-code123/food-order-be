@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Order = db.orders
 const FoodQuantity = db.foodquantity
 
@@ -239,7 +239,7 @@ const createOrderWithItems = async (req, res) => {
   }
 }
 
-module.exports = {
+export default {
   getOrders,
   getOrderById,
   createOrder,

@@ -1,5 +1,5 @@
 const foodController = require('./food.controller')
 
-module.exports = {
+export default {
   foodController
 }

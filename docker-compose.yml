@@ -40,10 +40,10 @@ services:
     image: redis:latest
     ports:
       - '6379:6379' # Forward Redis port to host machine
-  # elasticsearch:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
-  #   ports:
-  #     - "9200:9200"  # Forward Elasticsearch HTTP port to host machine
-  #     - "9300:9300"  # Forward Elasticsearch TCP transport port to host machine
-  #   environment:
-  #     - discovery.seed_hosts=node1,node2
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    ports:
+      - '9200:9200' # Forward Elasticsearch HTTP port to host machine
+      - '9300:9300' # Forward Elasticsearch TCP transport port to host machine
+    environment:
+      - discovery.seed_hosts=node1,node2

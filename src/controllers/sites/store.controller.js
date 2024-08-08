@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Store = db.stores
 
 const createStore = async (req, res) => {
@@ -85,7 +85,7 @@ const deleteStore = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-module.exports = {
+export default {
   getStores,
   getStoreById,
   createStore,

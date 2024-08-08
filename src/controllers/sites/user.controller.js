@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const bcrypt = require('bcrypt')
 const User = db.users
 
@@ -121,7 +121,7 @@ const updateUserByUser = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-module.exports = {
+export default {
   createUser,
   getUsers,
   getUserById,

@@ -1,15 +1,17 @@
+import 'module-alias/register'
+
 const express = require('express')
 const bodyParser = require('body-parser')
 
-const error404Middleware = require('./src/middlewares/error404Middleware')
-const authMiddleware = require('./src/middlewares/authMiddleware')
-const db = require('./src/models')
+const error404Middleware = require('./src/middlewares/error404.middleware')
 const cors = require('cors')
-const loggers = require('./src/utils/logger.utils')
+import loggers from '@src/utils/logger.utils'
 
-const router = require('./src/routes')
-const siteRouter = require('./src/routes/site')
-const apiRouter = require('./src/routes/api')
+import apiCustomerV1Router from '@src/routes/api/v1/customers'
+import apiMerchantV1Router from '@src/routes/api/v1/merchants'
+
+import siteRouter from '@src/routes/site'
+import db from '@src/models'
 
 const app = express()
 
@@ -29,29 +31,32 @@ db.sequelize
 
 app.use(bodyParser.json())
 app.use(cors())
+// Define api routes to use for mobile app
 
-// define api routes to use for mobile app
+app.use('/api/v1/customer/orders', apiCustomerV1Router.orderRouter)
 
 // Define api routes to use for mobile app
-app.use('/api/v1/foods', router.foodRoutes)
-app.use('/api/v1/categories', router.categoryRoutes)
-app.use('/api/v1/stores', router.storeRoutes)
-app.use('/api/v1/users', router.userRoutes)
-app.use('/api/v1/shippers', router.shipperRoutes)
-app.use('/api/v1/vouchers', router.voucherRoutes)
-app.use('/api/v1/orders', router.orderRoutes)
-app.use('/api/v1/payments', router.paymentRoutes)
-app.use('/api/v1/reviewfoods', router.reviewfoodRoutes)
-app.use('/api/v1/reviewshippers', router.reviewshipperRoutes)
-app.use('/api/v1/reviewstores', router.reviewstoreRoutes)
-app.use('/api/v1/foodquantities', router.foodquantityRoutes)
-app.use('/api/v1/login', router.loginRoutes)
+
+app.use('/api/v1/merchant/orders', apiMerchantV1Router.orderRouter)
+
+// define api routes to use for mobile app
+app.use('/api/v1/shippers/orders', apiMerchantV1Router.orderRouter)
 
 // define site routes to use for cms admin
 
-// Define cms routes to use for cms admin
-
-app.use('/api/v1/admin', router.adminRoutes)
+// app.use('/site/foods', siteRouter.foodRoutes)
+// app.use('/site/categories', siteRouter.categoryRoutes)
+// app.use('/site/stores', siteRouter.storeRoutes)
+// app.use('/site/users', siteRouter.userRoutes)
+// app.use('/site/shippers', siteRouter.shipperRoutes)
+// app.use('/site/vouchers', siteRouter.voucherRoutes)
+// app.use('/site/orders', siteRouter.orderRoutes)
+// app.use('/site/payments', siteRouter.paymentRoutes)
+// app.use('/site/reviewfoods', siteRouter.reviewfoodRoutes)
+// app.use('/site/reviewshippers', siteRouter.reviewshipperRoutes)
+// app.use('/site/reviewstores', siteRouter.reviewstoreRoutes)
+// app.use('/site/foodquantities', siteRouter.foodquantityRoutes)
+// app.use('/site/login', siteRouter.loginRoutes)
 
 app.use(error404Middleware)
 

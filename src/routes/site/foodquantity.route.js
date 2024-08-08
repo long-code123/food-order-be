@@ -1,7 +1,8 @@
-const express = require('express')
+import express from 'express'
+
+import foodquantityController from '@src/controllers/sites/foodquantity.controller'
 
 const router = express.Router()
-const foodquantityController = require('../controllers/foodquantity.controller')
 
 router.get('/', foodquantityController.getFoodquantitys)
 router.get('/:id', foodquantityController.getFoodquantityById)
@@ -9,4 +10,4 @@ router.post('/', foodquantityController.createFoodquantity)
 router.put('/:id', foodquantityController.updateFoodquantity)
 router.delete('/:id', foodquantityController.deleteFoodquantity)
 
-module.exports = router
+export default router

@@ -27,4 +27,4 @@ const loggers = winston.createLogger({
     })
   ]
 })
-module.exports = loggers
+export default loggers

@@ -1,7 +1,7 @@
-const express = require('express')
+import express from 'express'
+import reviewfoodController from '@src/controllers/sites/reviewfood.controller'
 
 const router = express.Router()
-const reviewfoodController = require('../controllers/reviewfood.controller')
 
 router.get('/', reviewfoodController.getReviewfoods)
 router.get('/:id', reviewfoodController.getReviewfoodById)
@@ -9,4 +9,4 @@ router.post('/', reviewfoodController.createReviewfood)
 router.put('/:id', reviewfoodController.updateReviewfood)
 router.delete('/:id', reviewfoodController.deleteReviewfood)
 
-module.exports = router
+export default router

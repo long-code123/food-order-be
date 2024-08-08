@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize')
+import Sequelize from 'sequelize'
 
-const sequelize = require('../common/db.js')
-
+import sequelize from '@src/common/db.js'
+import logger from '@src/utils/logger.utils'
 const db = {}
 
 db.foods = require('./food.model.js')(sequelize, Sequelize)
@@ -19,7 +19,7 @@ db.users = require('./user.model.js')(sequelize, Sequelize)
 db.admin = require('./admin.model.js')(sequelize, Sequelize)
 
 Object.keys(db).forEach((modelName) => {
-  console.log('modelName', modelName)
+  logger.info(`modelName: ${modelName}`)
   if (db[modelName].associate) {
     db[modelName].associate(db)
   }
@@ -28,4 +28,4 @@ Object.keys(db).forEach((modelName) => {
 db.Sequelize = Sequelize
 db.sequelize = sequelize
 
-module.exports = db
+export default db

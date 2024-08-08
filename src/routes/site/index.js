@@ -1,19 +1,19 @@
-const foodRoutes = require('./food.route')
-const categoryRoutes = require('./category.route')
-const storeRoutes = require('./store.route')
-const userRoutes = require('./user.route')
-const shipperRoutes = require('./shipper.route')
-const voucherRoutes = require('./voucher.route')
-const orderRoutes = require('./order.route')
-const paymentRoutes = require('./payment.route')
-const reviewfoodRoutes = require('./reviewfood.route')
-const reviewshipperRoutes = require('./reviewshipper.route')
-const reviewstoreRoutes = require('./reviewstore.route')
-const foodquantityRoutes = require('./foodquantity.route')
-const loginRoutes = require('./login.route')
-const adminRoutes = require('./admin.route')
+import foodRoutes from './food.route'
+import categoryRoutes from './category.route'
+import storeRoutes from './store.route'
+import userRoutes from './user.route'
+import shipperRoutes from './shipper.route'
+import voucherRoutes from './voucher.route'
+import orderRoutes from './order.route'
+import paymentRoutes from './payment.route'
+import reviewfoodRoutes from './reviewfood.route'
+import reviewshipperRoutes from './reviewshipper.route'
+import reviewstoreRoutes from './reviewstore.route'
+import foodquantityRoutes from './foodquantity.route'
+import loginRoutes from './login.route'
+import adminRoutes from './admin.route'
 
-module.exports = {
+export default {
   foodRoutes,
   categoryRoutes,
   storeRoutes,

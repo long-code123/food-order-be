@@ -1,7 +1,7 @@
-const express = require('express')
+import express from 'express'
+import orderController from '@src/controllers/sites/order.controller'
 
 const router = express.Router()
-const orderController = require('../controllers/order.controller')
 
 router.get('/', orderController.getOrders)
 router.get('/:id', orderController.getOrderById)
@@ -10,4 +10,4 @@ router.put('/:id/status', orderController.updateStatusOrder)
 router.delete('/:id', orderController.deleteOrder)
 router.post('/orders', orderController.createOrderWithItems)
 
-module.exports = router
+export default router

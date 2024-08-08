@@ -1,11 +1,12 @@
-const express = require('express')
+import express from 'express'
+import storeController from '@src/controllers/sites/store.controller'
+import foodController from '@src/controllers/sites/food.controller'
+import authorizeMiddleware from '@src/middlewares/authorize.middleware'
+import authMiddleware from '@src/middlewares/auth.middleware'
+import reviewstoreController from '@src/controllers/sites/reviewstore.controller'
+import paymentController from '@src/controllers/sites/payment.controller'
+
 const router = express.Router()
-const storeController = require('../controllers/store.controller')
-const foodController = require('../controllers/food.controller')
-const authorizeMiddleware = require('../../middlewares/authorizeMiddleware')
-const authMiddleware = require('../../middlewares/authMiddleware')
-const reviewstoreController = require('../controllers/reviewstore.controller')
-const paymentController = require('../controllers/payment.controller')
 
 router.get('/', storeController.getStores)
 router.get('/:id', authMiddleware, authorizeMiddleware(['super admin', 'admin']), storeController.getStoreById)
@@ -16,4 +17,4 @@ router.get('/:id/foods', foodController.getFoodsByStore)
 router.get('/:id/reviews', reviewstoreController.getReviewsByStore)
 router.get('/:id/payments', paymentController.getPaymentsByStore)
 
-module.exports = router
+export default router

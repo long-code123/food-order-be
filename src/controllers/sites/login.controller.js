@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const db = require('../models')
+import db from '@src/models'
 const bcrypt = require('bcrypt')
 const User = db.users
 
@@ -80,4 +80,4 @@ const getCurrentUser = async (req, res) => {
   }
 }
 
-module.exports = { login, getCurrentUser }
+export default { login, getCurrentUser }

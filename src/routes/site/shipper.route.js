@@ -1,11 +1,12 @@
-const express = require('express')
-const router = express.Router()
-const shipperController = require('../controllers/shipper.controller')
-const authorizeMiddleware = require('../../middlewares/authorizeMiddleware')
-const authMiddleware = require('../../middlewares/authMiddleware')
-const reviewshipperController = require('../controllers/reviewshipper.controller')
-const orderController = require('../controllers/order.controller')
+import express from 'express'
 
+import shipperController from '@src/controllers/sites/shipper.controller'
+import authorizeMiddleware from '@src/middlewares/authorize.middleware'
+import authMiddleware from '@src/middlewares/auth.middleware'
+import reviewshipperController from '@src/controllers/sites/reviewshipper.controller'
+import orderController from '@src/controllers/sites/order.controller'
+
+const router = express.Router()
 router.get('/', authMiddleware, authorizeMiddleware(['super admin', 'admin']), shipperController.getShippers)
 router.get('/:id', authMiddleware, authorizeMiddleware(['super admin', 'admin']), shipperController.getShipperById)
 router.post('/', shipperController.createShipper)
@@ -14,4 +15,4 @@ router.delete('/:id', authMiddleware, authorizeMiddleware(['super admin']), ship
 router.get('/:id/review', reviewshipperController.getReviewsByShipper)
 router.get('/:id/orders', orderController.getOrderByShipper)
 
-module.exports = router
+export default router

@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Reviewfood = db.reviewfood
 
 const createReviewfood = async (req, res) => {
@@ -88,7 +88,7 @@ const deleteReviewfood = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-module.exports = {
+export default {
   getReviewfoods,
   getReviewfoodById,
   createReviewfood,

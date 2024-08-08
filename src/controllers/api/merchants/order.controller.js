@@ -1,27 +1,12 @@
-const db = require('../models')
+import db from '@src/models'
 const Order = db.orders
 const FoodQuantity = db.foodquantity
 
-const createOrder = async (req, res) => {
-  try {
-    if (!req.body.deliveryTime) {
-      return res.status(400).json({ message: 'Order delivery Time is required.' })
-    }
-    const newOrder = {
-      deliveryTime: req.body.deliveryTime,
-      userId: req.body.userId || null,
-      shipperId: req.body.shipperId || null
-    }
-    const createdOrder = await Order.create(newOrder)
-    res.status(201).json(createdOrder)
-    console.log('Create Successfully')
-  } catch (error) {
-    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
-    console.error('Error creating order:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
+const acceptOrder = async (req, res) => {
+  // TODO: Xử lý chấp nhận đơn hàng
 }
-const getOrders = async (req, res) => {
+
+const getOrdersByMerchantId = async (req, res) => {
   try {
     const allOrders = await Order.findAll()
 
@@ -110,142 +95,8 @@ const deleteOrder = async (req, res) => {
   }
 }
 
-const getOrderByShipper = async (req, res) => {
-  try {
-    const shipperId = req.params.id
-    if (!shipperId) {
-      return res.status(400).json({ message: 'Invalid shipperId' })
-    }
-
-    const orders = await Order.findAll({
-      where: { shipperId },
-      include: [
-        {
-          model: FoodQuantity,
-          as: 'items',
-          include: [
-            {
-              model: db.foods,
-              as: 'food'
-            }
-          ]
-        }
-      ]
-    })
-
-    if (orders.length === 0) {
-      return res.status(404).json({ message: 'No order for shipper' })
-    }
-
-    res.status(200).json(orders)
-  } catch (error) {
-    console.error('Error fetching Orders by shipper:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-
-const getOrderByUser = async (req, res) => {
-  try {
-    const userId = req.params.id
-    if (!userId) {
-      return res.status(400).json({ message: 'Invalid userId' })
-    }
-
-    const orders = await Order.findAll({
-      where: { userId },
-      include: [
-        {
-          model: FoodQuantity,
-          as: 'items',
-          include: [
-            {
-              model: db.foods,
-              as: 'food'
-            }
-          ]
-        }
-      ]
-    })
-
-    if (orders.length === 0) {
-      return res.status(404).json({ message: 'No order for user' })
-    }
-
-    res.status(200).json(orders)
-  } catch (error) {
-    console.error('Error fetching Orders by user:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-
-const createOrderWithItems = async (req, res) => {
-  const { deliveryTime, userId, shipperId, items } = req.body
-
-  if (!deliveryTime || !items || items.length === 0) {
-    return res.status(400).json({ message: 'Delivery time and items are required.' })
-  }
-
-  const t = await db.sequelize.transaction()
-
-  try {
-    // Tạo đơn hàng mới
-    const newOrder = await Order.create(
-      {
-        deliveryTime,
-        userId,
-        shipperId,
-        status: 'pending' // Set the initial status to 'pending'
-      },
-      { transaction: t }
-    )
-
-    // Tạo các FoodQuantity mới
-    const foodQuantities = items.map((item) => ({
-      orderId: newOrder.orderId,
-      foodId: item.foodId,
-      quantity: item.quantity
-    }))
-
-    await FoodQuantity.bulkCreate(foodQuantities, { transaction: t })
-
-    // Commit transaction
-    await t.commit()
-
-    // Lấy lại đơn hàng cùng với các món ăn
-    const createdOrder = await Order.findOne({
-      where: { orderId: newOrder.orderId },
-      include: [
-        {
-          model: FoodQuantity,
-          as: 'items',
-          include: [
-            {
-              model: db.foods,
-              as: 'food'
-            }
-          ]
-        }
-      ]
-    })
-
-    res.status(201).json(createdOrder)
-  } catch (error) {
-    // Rollback transaction nếu có lỗi xảy ra trước khi commit
-    if (!t.finished) {
-      await t.rollback()
-    }
-    console.error('Error creating order with items:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-
-module.exports = {
-  getOrders,
+export default {
   getOrderById,
-  createOrder,
   updateStatusOrder,
-  deleteOrder,
-  getOrderByShipper,
-  getOrderByUser,
-  createOrderWithItems
+  deleteOrder
 }

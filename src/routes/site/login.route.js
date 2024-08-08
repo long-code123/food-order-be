@@ -1,10 +1,10 @@
-const express = require('express')
+import express from 'express'
+import loginController from '@src/controllers/sites/login.controller'
+import authMiddleware from '@src/middlewares/auth.middleware'
 
 const router = express.Router()
-const loginController = require('../controllers/login.controller')
-const authMiddleware = require('../../middlewares/authMiddleware')
 
 router.post('/', loginController.login)
 router.get('/me', authMiddleware, loginController.getCurrentUser)
 
-module.exports = router
+export default router

@@ -1,4 +1,4 @@
-const db = require('../models')
+import db from '@src/models'
 const Payment = db.payment
 
 const createPayment = async (req, res) => {
@@ -92,24 +92,26 @@ const deletePayment = async (req, res) => {
   }
 }
 
+
 const getPaymentsByStore = async (req, res) => {
   try {
     const storeId = req.params.id
     if (!storeId) {
-      return res.status(400).json({ message: 'Invalid shipperId' })
+      return res.status(400).json({ message: 'Invalid storeId' })
     }
+
     const payments = await Payment.findAll({ where: { storeId } })
     if (payments.length === 0) {
-      return res.status(404).json({ message: 'No Payments for store' })
+      return res.status(404).json({ message: 'No payments found for this store' })
     }
     res.status(200).json(payments)
-  } catch {
-    console.error('Error fetching Payments by store: ', error)
+  } catch (error) {
+    console.error('Error fetching payments by store:', error)
     res.status(500).json({ message: 'Internal server error' })
   }
 }
 
-module.exports = {
+export default {
   getPayments,
   getPaymentById,
   createPayment,

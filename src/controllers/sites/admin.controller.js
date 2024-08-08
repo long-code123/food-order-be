@@ -1,4 +1,5 @@
-const db = require('../../models')
+import db from '@src/models'
+
 const Admin = db.admin
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -148,7 +149,7 @@ const getCurrentAdmin = async (req, res) => {
   }
 }
 
-module.exports = {
+export default {
   createAdmin,
   getAdmins,
   getAdminById,
