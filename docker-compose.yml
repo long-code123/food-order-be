@@ -17,24 +17,24 @@ services:
     ports:
       - '5050:80'
 
-  food-order-be:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=127.0.0.1
-      - DB_USER=postgres
-      - DB_PASSWORD=nguyenbalong
-      - DB_NAME=food_app
-      - DB_POOL_MAX=5
-      - DB_POOL_MIN=0
-      - DB_POOL_ACQUIRE=30000
-      - DB_POOL_IDLE=10000
-      - REDIS_HOST=127.0.0.1
+  # food-order-be:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DB_HOST=127.0.0.1
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=nguyenbalong
+  #     - DB_NAME=food_app
+  #     - DB_POOL_MAX=5
+  #     - DB_POOL_MIN=0
+  #     - DB_POOL_ACQUIRE=30000
+  #     - DB_POOL_IDLE=10000
+  #     - REDIS_HOST=127.0.0.1
 
   redis:
     image: redis:latest
