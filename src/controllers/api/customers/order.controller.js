@@ -89,60 +89,6 @@ const updateStatusOrder = async (req, res) => {
   }
 }
 
-const deleteOrder = async (req, res) => {
-  try {
-    const orderId = req.params.id
-    const existingOrder = await Order.findByPk(orderId)
-    if (!existingOrder) {
-      return res.status(404).json({ message: 'Order not found' })
-    }
-
-    // Xóa món ăn khỏi cơ sở dữ liệu
-    await existingOrder.destroy()
-
-    // Trả về thông báo thành công
-    res.status(200).json({ message: 'Order deleted successfully' })
-  } catch (error) {
-    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
-    console.error('Error deleting order:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-
-const getOrderByShipper = async (req, res) => {
-  try {
-    const shipperId = req.params.id
-    if (!shipperId) {
-      return res.status(400).json({ message: 'Invalid shipperId' })
-    }
-
-    const orders = await Order.findAll({
-      where: { shipperId },
-      include: [
-        {
-          model: FoodQuantity,
-          as: 'items',
-          include: [
-            {
-              model: db.foods,
-              as: 'food'
-            }
-          ]
-        }
-      ]
-    })
-
-    if (orders.length === 0) {
-      return res.status(404).json({ message: 'No order for shipper' })
-    }
-
-    res.status(200).json(orders)
-  } catch (error) {
-    console.error('Error fetching Orders by shipper:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-
 const getOrderByUser = async (req, res) => {
   try {
     const userId = req.params.id
@@ -241,10 +187,8 @@ const createOrderWithItems = async (req, res) => {
 module.exports = {
   getOrders,
   getOrderById,
-  createOrder,
   updateStatusOrder,
-  deleteOrder,
-  getOrderByShipper,
   getOrderByUser,
-  createOrderWithItems
+  createOrderWithItems,
+  createOrder
 }

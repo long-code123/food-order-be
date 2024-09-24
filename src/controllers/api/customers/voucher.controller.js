@@ -1,4 +1,4 @@
-const db = require('../models')
+const db = require('@src/models')
 const Voucher = db.voucher
 
 const getVouchers = async (req, res) => {

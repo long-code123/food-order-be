@@ -1,4 +1,4 @@
-const db = require('../models')
+const db = require('@src/models')
 const Reviewfood = db.reviewfood
 
 const createReviewfood = async (req, res) => {

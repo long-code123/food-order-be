@@ -1,6 +1,6 @@
-const db = require('../models')
+import db from '@src/models'
 const Food = db.foods
-const config = require('../configs/redis.config')
+const config = require('@src/configs/redis.config')
 const Redis = require('ioredis')
 const redis = new Redis(config)
 
@@ -39,57 +39,6 @@ const getFoodById = async (req, res) => {
   }
 }
 
-const updateFood = async (req, res) => {
-  try {
-    const foodId = req.params.id
-
-    // Kiểm tra xem món ăn có tồn tại trong cơ sở dữ liệu không
-    const existingFood = await Food.findByPk(foodId)
-    if (!existingFood) {
-      return res.status(404).json({ message: 'Food not found' })
-    }
-
-    // Cập nhật thông tin của món ăn từ dữ liệu trong yêu cầu
-    existingFood.foodName = req.body.foodName || existingFood.foodName
-    existingFood.price = req.body.price || existingFood.price
-    existingFood.rating = req.body.rating || existingFood.rating
-    existingFood.description = req.body.description || existingFood.description
-    existingFood.foodImage = req.body.foodImage || existingFood.foodImage
-    existingFood.categoryId = req.body.categoryId || existingFood.categoryId
-    existingFood.storeId = req.body.storeId || existingFood.storeId
-
-    // Lưu các thay đổi vào cơ sở dữ liệu
-    const updatedFood = await existingFood.save()
-
-    // Trả về món ăn đã được cập nhật
-    res.status(200).json(updatedFood)
-  } catch (error) {
-    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
-    console.error('Error updating food:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-const deleteFood = async (req, res) => {
-  try {
-    const foodId = req.params.id
-
-    // Kiểm tra xem món ăn có tồn tại trong cơ sở dữ liệu không
-    const existingFood = await Food.findByPk(foodId)
-    if (!existingFood) {
-      return res.status(404).json({ message: 'Food not found' })
-    }
-
-    // Xóa món ăn khỏi cơ sở dữ liệu
-    await existingFood.destroy()
-
-    // Trả về thông báo thành công
-    res.status(200).json({ message: 'Food deleted successfully' })
-  } catch (error) {
-    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
-    console.error('Error deleting food:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
 const getFoodsByStore = async (req, res) => {
   try {
     const storeId = req.params.id
@@ -130,8 +79,6 @@ const getFoodsByCategory = async (req, res) => {
 module.exports = {
   getFoods,
   getFoodById,
-  updateFood,
-  deleteFood,
   getFoodsByStore,
   getFoodsByCategory
 }

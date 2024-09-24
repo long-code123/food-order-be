@@ -10,7 +10,6 @@ import reviewfoodRoutes from './reviewfood.route'
 import reviewshipperRoutes from './reviewshipper.route'
 import reviewstoreRoutes from './reviewstore.route'
 import foodquantityRoutes from './foodquantity.route'
-import loginRoutes from './login.route'
 import adminRoutes from './admin.route'
 
 export default {
@@ -26,6 +25,5 @@ export default {
   reviewshipperRoutes,
   reviewstoreRoutes,
   foodquantityRoutes,
-  loginRoutes,
   adminRoutes
 }
