@@ -1,35 +1,8 @@
-const db = require('../models')
+import db from '@src/models'
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 const Store = db.stores
-
-const createStore = async (req, res) => {
-  try {
-    if (!req.body.storeName || !req.body.address) {
-      return res.status(400).json({ message: 'Store name and address are required.' })
-    }
-    const newStore = {
-      storeName: req.body.storeName,
-      storeImage: req.body.storeImage || null,
-      address: req.body.address
-    }
-    const createdStore = await Store.create(newStore)
-    res.status(201).json(createdStore)
-    console.log('Create Successfully')
-  } catch (error) {
-    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
-    console.error('Error creating store:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-const getStores = async (req, res) => {
-  try {
-    const allStores = await Store.findAll()
-
-    res.status(200).json(allStores)
-  } catch (error) {
-    console.error('Error getting stores:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
+const User = db.users
 
 const getStoreById = async (req, res) => {
   const storeId = req.params.id
@@ -85,10 +58,54 @@ const deleteStore = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
+const loginUserForStore = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Tìm người dùng với email đã cung cấp
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Kiểm tra mật khẩu
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Tạo token JWT
+    const token = jwt.sign({ userId: user.userId }, 'secretKey', { expiresIn: '1h' });
+
+    // Tìm cửa hàng liên kết với userId
+    const store = await Store.findOne({ where: { userId: user.userId } });
+
+    // Trả về thông tin người dùng và cửa hàng (nếu có)
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        userId: user.userId,
+        userName: user.userName,
+        email: user.email,
+      },
+      store: store ? {
+        storeId: store.storeId,
+        storeName: store.storeName,
+        address: store.address,
+      } : null
+    });
+  } catch (error) {
+    console.error('Error logging in user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
-  getStores,
   getStoreById,
-  createStore,
   updateStore,
-  deleteStore
+  deleteStore,
+  loginUserForStore
 }

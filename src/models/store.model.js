@@ -15,8 +15,22 @@ module.exports = (sequelize, Sequelize) => {
     },
     address: {
       type: Sequelize.STRING
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'users',
+        key: 'userId'
+      }
     }
   })
+
+  stores.associate = (models) => {
+    stores.belongsTo(models.users, {
+      foreignKey: 'userId', 
+      targetKey: 'userId'
+    })
+  }
 
   return stores
 }

@@ -9,7 +9,8 @@ const createStore = async (req, res) => {
     const newStore = {
       storeName: req.body.storeName,
       storeImage: req.body.storeImage || null,
-      address: req.body.address
+      address: req.body.address,
+      userId: req.body.userId
     }
     const createdStore = await Store.create(newStore)
     res.status(201).json(createdStore)
@@ -58,6 +59,7 @@ const updateStore = async (req, res) => {
     existingStore.storeName = req.body.storeName || existingStore.storeName
     existingStore.storeImage = req.body.storeImage || existingStore.storeImage
     existingStore.address = req.body.address || existingStore.address
+    existingStore.userId = req.body.userId || existingStore.userId
     const updatedStore = await existingStore.save()
     res.status(200).json(updatedStore)
   } catch (error) {

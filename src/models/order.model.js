@@ -26,6 +26,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
       defaultValue: 'pending'
+    },
+    storeId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'stores',
+        key: 'storeId'
+      }
     }
   })
 
@@ -41,6 +48,10 @@ module.exports = (sequelize, Sequelize) => {
     orders.hasMany(models.foodquantity, {
       foreignKey: 'orderId',
       as: 'items'
+    })
+    orders.belongsTo(models.stores, {
+      foreignKey: 'storeId',
+      targetKey: 'storeId'
     })
   }
 

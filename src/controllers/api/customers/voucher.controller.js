@@ -1,4 +1,4 @@
-const db = require('@src/models')
+import db from '@src/models'
 const Voucher = db.voucher
 
 const getVouchers = async (req, res) => {
@@ -28,8 +28,28 @@ const getVoucherById = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+const deleteVoucher = async (req, res) => {
+  try {
+    const voucherId = req.params.id
+    const existingVoucher = await Voucher.findByPk(voucherId)
+    if (!existingVoucher) {
+      return res.status(404).json({ message: 'Voucher not found' })
+    }
+
+    // Xóa món ăn khỏi cơ sở dữ liệu
+    await existingVoucher.destroy()
+
+    // Trả về thông báo thành công
+    res.status(200).json({ message: 'Voucher deleted successfully' })
+  } catch (error) {
+    // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
+    console.error('Error deleting voucher:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}
 
 module.exports = {
   getVouchers,
-  getVoucherById
+  getVoucherById,
+  deleteVoucher
 }

@@ -7,10 +7,12 @@ const createOrder = async (req, res) => {
     if (!req.body.deliveryTime) {
       return res.status(400).json({ message: 'Order delivery Time is required.' })
     }
+    console.log(req.body);
     const newOrder = {
       deliveryTime: req.body.deliveryTime,
       userId: req.body.userId || null,
-      shipperId: req.body.shipperId || null
+      shipperId: req.body.shipperId || null,
+      storeId: req.body.storeId || null
     }
     const createdOrder = await Order.create(newOrder)
     res.status(201).json(createdOrder)
@@ -62,33 +64,6 @@ const getOrderById = async (req, res) => {
   }
 }
 
-const updateStatusOrder = async (req, res) => {
-  try {
-    const orderId = req.params.id
-    const { status } = req.body
-
-    // Kiểm tra nếu không có status trong body của request
-    if (!status) {
-      return res.status(400).json({ message: 'Status is required' })
-    }
-
-    // Tìm order theo orderId
-    const existingOrder = await Order.findByPk(orderId)
-    if (!existingOrder) {
-      return res.status(404).json({ message: 'Order not found' })
-    }
-
-    // Cập nhật trường status của order
-    existingOrder.status = status
-    const updatedOrder = await existingOrder.save()
-
-    res.status(200).json(updatedOrder)
-  } catch (error) {
-    console.error('Error updating order status:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-
 const getOrderByUser = async (req, res) => {
   try {
     const userId = req.params.id
@@ -124,7 +99,7 @@ const getOrderByUser = async (req, res) => {
 }
 
 const createOrderWithItems = async (req, res) => {
-  const { deliveryTime, userId, shipperId, items } = req.body
+  const { deliveryTime, userId, shipperId, items, storeId } = req.body
 
   if (!deliveryTime || !items || items.length === 0) {
     return res.status(400).json({ message: 'Delivery time and items are required.' })
@@ -133,13 +108,13 @@ const createOrderWithItems = async (req, res) => {
   const t = await db.sequelize.transaction()
 
   try {
-    // Tạo đơn hàng mới
     const newOrder = await Order.create(
       {
         deliveryTime,
         userId,
         shipperId,
-        status: 'pending' // Set the initial status to 'pending'
+        status: 'pending',
+        storeId
       },
       { transaction: t }
     )
@@ -184,11 +159,44 @@ const createOrderWithItems = async (req, res) => {
   }
 }
 
+const getLastOrderByUser = async (req, res) => {
+  const userId = req.params.id; // Lấy userId từ tham số URL
+
+  try {
+    // Lấy đơn hàng mới nhất của người dùng
+    const lastOrder = await Order.findOne({
+      where: { userId },
+      order: [['createdAt', 'DESC']], // Sắp xếp theo thời gian tạo, mới nhất trước
+      include: [
+        {
+          model: FoodQuantity,
+          as: 'items',
+          include: [
+            {
+              model: db.foods,
+              as: 'food'
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!lastOrder) {
+      return res.status(404).json({ message: 'No order found for user' });
+    }
+
+    res.status(200).json(lastOrder);
+  } catch (error) {
+    console.error('Error fetching last order by user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getOrders,
   getOrderById,
-  updateStatusOrder,
   getOrderByUser,
   createOrderWithItems,
-  createOrder
+  createOrder,
+  getLastOrderByUser
 }

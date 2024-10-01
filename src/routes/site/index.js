@@ -5,7 +5,6 @@ import userRoutes from './user.route'
 import shipperRoutes from './shipper.route'
 import voucherRoutes from './voucher.route'
 import orderRoutes from './order.route'
-import paymentRoutes from './payment.route'
 import reviewfoodRoutes from './reviewfood.route'
 import reviewshipperRoutes from './reviewshipper.route'
 import reviewstoreRoutes from './reviewstore.route'
@@ -20,7 +19,6 @@ export default {
   shipperRoutes,
   voucherRoutes,
   orderRoutes,
-  paymentRoutes,
   reviewfoodRoutes,
   reviewshipperRoutes,
   reviewstoreRoutes,

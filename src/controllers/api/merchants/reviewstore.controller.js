@@ -1,6 +1,4 @@
-import { error } from 'winston'
-
-const db = require('../models')
+import db from '@src/models'
 const Reviewstore = db.reviewstore
 
 const getReviewsByStore = async (req, res) => {

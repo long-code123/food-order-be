@@ -1,4 +1,4 @@
-import db from '../models'
+import db from '@src/models'
 import config from '@src/configs/redis.config'
 const Food = db.foods
 
@@ -118,10 +118,41 @@ const getFoodsByStore = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
+const getFoodsByStoreAndCategory = async (req, res) => {
+  try {
+    const { storeId, categoryId } = req.params;
+
+    // Kiểm tra nếu storeId và categoryId không tồn tại
+    if (!storeId || !categoryId) {
+      return res.status(400).json({ message: 'storeId and categoryId are required' });
+    }
+
+    // Lấy danh sách món ăn theo storeId và categoryId
+    const foods = await Food.findAll({
+      where: {
+        storeId: storeId,
+        categoryId: categoryId,
+      },
+    });
+
+    // Nếu không tìm thấy món ăn nào, trả về thông báo
+    if (foods.length === 0) {
+      return res.status(404).json({ message: 'No foods found for this store and category' });
+    }
+
+    res.status(200).json(foods);
+  } catch (error) {
+    console.error('Error fetching foods by store and category:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export default {
   getFoodById,
   createFood,
   updateFood,
   deleteFood,
-  getFoodsByStore
+  getFoodsByStore,
+  getFoodsByStoreAndCategory
 }

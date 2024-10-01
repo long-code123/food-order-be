@@ -68,7 +68,7 @@ const getFoodsByCategory = async (req, res) => {
     if (foods.length === 0) {
       return res.status(404).json({ message: 'No foods found for this store' })
     }
-    res.status(200).json({foods})
+    res.status(200).json(foods)
     
   } catch (error) {
     console.error('Error fetching foods by category:', error)
