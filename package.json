@@ -40,6 +40,7 @@
   "devDependencies": {
     "@babel/node": "^7.25.0",
     "@babel/preset-env": "^7.25.3",
-    "@types/express": "^5.0.0"
+    "@types/express": "^5.0.0",
+    "sequelize-cli": "^6.6.2"
   }
 }
