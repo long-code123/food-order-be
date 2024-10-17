@@ -1,6 +1,77 @@
-const db = require('../models')
+import db from "@src/models"
 const bcrypt = require('bcrypt')
 const Shipper = db.shippers
+const jwt = require('jsonwebtoken')
+
+const secretKey = 'your_secret_key'
+
+const loginShipper = async (req, res) => {
+  const shipperName = req.body.shipperName
+  const password = req.body.password
+
+  console.log(shipperName + password)
+
+  try {
+    // Tìm shipper trong cơ sở dữ liệu
+    const shipper = await Shipper.findOne({ where: { shipperName: shipperName } })
+
+    if (!shipper) {
+      return res.status(401).json({ error: 'Invalid username' })
+    }
+    const passwordMatch = await bcrypt.compare(password, shipper.password)
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid password' })
+    }
+
+    // Tạo mã JWT cho shipper
+    const token = jwt.sign(
+      {
+        shipperId: shipper.shipperId,
+        shipperName: shipper.shipperName,
+        phoneNumber: shipper.phoneNumber,
+        email: shipper.email,
+        address: shipper.address
+      },
+      secretKey,
+      { expiresIn: '1h' }
+    )
+
+    // Gửi mã JWT về client
+    res.json({
+      token,
+      shipper: {
+        shipperId: shipper.shipperId,
+        shipperName: shipper.shipperName,
+        phoneNumber: shipper.phoneNumber,
+        email: shipper.email,
+        address: shipper.address
+      }
+    })
+  } catch (error) {
+    console.error('Error:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+const getCurrentShipper = async (req, res) => {
+  try {
+    const shipper = req.shipper
+    console.log(shipper)
+    if (!shipper) {
+      return res.status(404).json({ message: 'Shipper not found' })
+    }
+    res.json({
+      shipperId: shipper.shipperId,
+      shipperName: shipper.shipperName,
+      phoneNumber: shipper.phoneNumber,
+      email: shipper.email,
+      address: shipper.address
+    })
+  } catch (error) {
+    console.error('Error:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}
 
 const createShipper = async (req, res) => {
   try {
@@ -25,34 +96,7 @@ const createShipper = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-const getShippers = async (req, res) => {
-  try {
-    const allShippers = await Shipper.findAll({
-      attributes: { exclude: ['password'] } // Loại bỏ trường password
-    })
 
-    res.status(200).json(allShippers)
-  } catch (error) {
-    console.error('Error getting shippers: ', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
-const getShipperById = async (req, res) => {
-  const shipperId = req.params.id
-  try {
-    const shipper = await Shipper.findByPk(shipperId, {
-      attributes: { exclude: ['password'] }
-    })
-    if (!shipper) {
-      return res.status(404).json({ message: 'Shipper not found' })
-    }
-
-    res.status(200).json(shipper)
-  } catch (error) {
-    console.error('Error getting Shipper by ID:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-}
 const updateShipper = async (req, res) => {
   try {
     const shipperId = req.params.id
@@ -76,6 +120,7 @@ const updateShipper = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
+
 const deleteShipper = async (req, res) => {
   try {
     const shipperId = req.params.id
@@ -93,9 +138,9 @@ const deleteShipper = async (req, res) => {
   }
 }
 module.exports = {
+  loginShipper,
+  getCurrentShipper,
   createShipper,
-  getShippers,
-  getShipperById,
   updateShipper,
   deleteShipper
 }

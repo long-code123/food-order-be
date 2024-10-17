@@ -9,7 +9,7 @@ import loggers from '@src/utils/logger.utils'
 
 import apiCustomerV1Router from '@src/routes/api/v1/customers'
 import apiMerchantV1Router from '@src/routes/api/v1/merchants'
-
+import apiShipperV1Router from '@src/routes/api/v1/shippers'
 import siteRouter from '@src/routes/site'
 import db from '@src/models'
 
@@ -31,7 +31,7 @@ db.sequelize
 
 app.use(bodyParser.json())
 app.use(cors())
-// Define api routes to use for mobile app
+// Define api routes to use for mobile app role customer
 
 app.use('/api/v1/customer/orders', apiCustomerV1Router.orderRouter)
 app.use('/api/v1/customer/login', apiCustomerV1Router.loginRouter)
@@ -44,15 +44,19 @@ app.use('/api/v1/customer/stores', apiCustomerV1Router.storeRouter)
 app.use('/api/v1/customer/users', apiCustomerV1Router.userRouter)
 
 
-// Define api routes to use for mobile app
+// Define api routes to use for mobile app role merchant
 
 app.use('/api/v1/merchant/orders', apiMerchantV1Router.orderRouter)
 app.use('/api/v1/merchant/stores', apiMerchantV1Router.storeRouter)
-app.use('/api/v1/merchant/foods', apiMerchantV1Router.storeRouter)
-app.use('/api/v1/merchant/categories', apiMerchantV1Router.storeRouter)
+app.use('/api/v1/merchant/foods', apiMerchantV1Router.foodRouter)
+app.use('/api/v1/merchant/categories', apiMerchantV1Router.categoryRouter)
 
-// define api routes to use for mobile app
-app.use('/api/v1/shippers/orders', apiMerchantV1Router.orderRouter)
+// define api routes to use for mobile app role shipper
+app.use('/api/v1/shippers/orders', apiShipperV1Router.orderRouter)
+app.use('/api/v1/shippers/foods', apiShipperV1Router.foodRouter)
+app.use('/api/v1/shippers', apiShipperV1Router.shipperRouter)
+app.use('/api/v1/shippers/users', apiShipperV1Router.userRouter)
+
 
 // define site routes to use for cms admin
 

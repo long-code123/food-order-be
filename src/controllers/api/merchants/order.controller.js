@@ -3,32 +3,58 @@ const Order = db.orders
 const FoodQuantity = db.foodquantity
 
 const acceptOrder = async (req, res) => {
-  const orderId = req.params.id;
+  const orderId = req.params.id
 
   try {
     // Tìm đơn hàng theo orderId
-    const existingOrder = await Order.findByPk(orderId);
-    
+    const existingOrder = await Order.findByPk(orderId)
+
     if (!existingOrder) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: 'Order not found' })
     }
 
     // Kiểm tra trạng thái đơn hàng, chỉ cho phép chấp nhận nếu trạng thái là "pending"
     if (existingOrder.status !== 'pending') {
-      return res.status(400).json({ message: 'Only orders with status "pending" can be accepted.' });
+      return res.status(400).json({ message: 'Only orders with status "pending" can be accepted.' })
     }
 
     // Cập nhật trạng thái đơn hàng thành "order received"
-    existingOrder.status = 'order received';
-    const updatedOrder = await existingOrder.save();
+    existingOrder.status = 'received'
+    const updatedOrder = await existingOrder.save()
 
-    res.status(200).json({ message: 'Order accepted successfully.', updatedOrder });
+    res.status(200).json({ message: 'Order accepted successfully.', updatedOrder })
   } catch (error) {
-    console.error('Error accepting order:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error accepting order:', error)
+    res.status(500).json({ message: 'Internal server error' })
   }
-};
+}
 
+const cancelOrder = async (req, res) => {
+  const orderId = req.params.id
+
+  try {
+    // Tìm đơn hàng theo orderId
+    const existingOrder = await Order.findByPk(orderId)
+
+    if (!existingOrder) {
+      return res.status(404).json({ message: 'Order not found' })
+    }
+
+    // Kiểm tra trạng thái đơn hàng, chỉ cho phép hủy nếu trạng thái là "pending"
+    if (existingOrder.status !== 'pending') {
+      return res.status(400).json({ message: 'Only orders with status "pending" can be canceled.' })
+    }
+
+    // Cập nhật trạng thái đơn hàng thành "canceled"
+    existingOrder.status = 'canceled'
+    const updatedOrder = await existingOrder.save()
+
+    res.status(200).json({ message: 'Order canceled successfully.', updatedOrder })
+  } catch (error) {
+    console.error('Error canceling order:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}
 
 const getOrders = async (req, res) => {
   try {
@@ -114,7 +140,7 @@ const calculateOrderTotal = async (req, res) => {
             {
               model: db.foods,
               as: 'food',
-              attributes: ['price'] 
+              attributes: ['price']
             }
           ]
         }
@@ -138,55 +164,12 @@ const calculateOrderTotal = async (req, res) => {
   }
 }
 
-const calculateStoreIncome = async (req, res) => {
-  const storeId = req.params.id;
-
-  try {
-    // Tìm tất cả các đơn hàng có liên quan đến storeId
-    const orders = await Order.findAll({
-      where: { storeId: storeId }, // Lọc các đơn hàng thuộc về storeId cụ thể
-      include: [
-        {
-          model: FoodQuantity,
-          as: 'items',
-          include: [
-            {
-              model: db.foods,
-              as: 'food',
-              attributes: ['price']
-            }
-          ]
-        }
-      ]
-    });
-
-    if (orders.length === 0) {
-      return res.status(404).json({ message: 'No orders found for this store.' });
-    }
-
-    // Tính tổng thu nhập cho cửa hàng
-    let totalIncome = 0;
-    orders.forEach(order => {
-      order.items.forEach(item => {
-        if (item.food) {
-          totalIncome += item.food.price * item.quantity;
-        }
-      });
-    });
-
-    res.status(200).json({ storeId: storeId, totalIncome: totalIncome });
-  } catch (error) {
-    console.error('Error calculating store income:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
 const getOrdersByStore = async (req, res) => {
-  const storeId = req.params.id;
+  const storeId = req.params.id
 
   try {
     const orders = await Order.findAll({
-      where: { storeId: storeId }, 
+      where: { storeId: storeId },
       include: [
         {
           model: FoodQuantity,
@@ -200,21 +183,73 @@ const getOrdersByStore = async (req, res) => {
           ]
         }
       ]
-    });
+    })
 
     if (orders.length === 0) {
-      return res.status(404).json({ message: 'No orders found for this store.' });
+      return res.status(404).json({ message: 'No orders found for this store.' })
     }
 
-    res.status(200).json(orders);
+    res.status(200).json(orders)
   } catch (error) {
-    console.error('Error getting orders by store:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error getting orders by store:', error)
+    res.status(500).json({ message: 'Internal server error' })
   }
-};
+}
+
+const calculateStoreIncome = async (req, res) => {
+  const storeId = req.params.id // Lấy storeId từ params
+
+  try {
+    // Lấy tất cả các đơn hàng có status là 'completed'
+    const orders = await Order.findAll({
+      where: {
+        storeId: storeId,
+        status: 'completed'
+      },
+      attributes: ['createdAt'], // Chỉ lấy ngày tạo
+      include: [
+        {
+          model: FoodQuantity,
+          as: 'items',
+          include: [
+            {
+              model: db.foods,
+              as: 'food',
+              attributes: ['price'] // Lấy giá của món ăn
+            }
+          ]
+        }
+      ]
+    })
+
+    if (orders.length === 0) {
+      return res.status(404).json({ message: 'No completed orders found for this store.' })
+    }
+
+    // Tính tổng tiền cho mỗi đơn hàng
+    const completedOrders = orders.map((order) => {
+      let total = 0
+      order.items.forEach((item) => {
+        if (item.food) {
+          total += item.food.price * item.quantity
+        }
+      })
+      return {
+        date: order.createdAt, // Ngày tạo đơn hàng
+        total: total // Tổng tiền
+      }
+    })
+
+    res.status(200).json({ orders: completedOrders })
+  } catch (error) {
+    console.error('Error fetching completed orders:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}
 
 export default {
   acceptOrder,
+  cancelOrder,
   getOrders,
   getOrderById,
   updateStatusOrder,

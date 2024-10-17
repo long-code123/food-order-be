@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@babel/node": "^7.25.0",
-    "@babel/preset-env": "^7.25.3"
+    "@babel/preset-env": "^7.25.3",
+    "@types/express": "^5.0.0"
   }
 }
