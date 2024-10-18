@@ -5,61 +5,61 @@ module.exports = {
     return queryInterface.bulkInsert('categories', [
       {
         categoryName: 'Pizza',
-        categoryImage: 'pizza.jpg',  // Bạn có thể đặt tên ảnh hoặc URL tương ứng
+        categoryImage: 'https://img.icons8.com/?size=48&id=80764&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Burger',
-        categoryImage: 'burger.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=12869&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Noodles',
-        categoryImage: 'noodles.jpg',
+        categoryImage: 'https://img.icons8.com/?size=100&id=2t0RMdi8ORb5&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Sandwich',
-        categoryImage: 'sandwich.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=HwIEsEmuCUlw&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Salad',
-        categoryImage: 'salad.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=zphNWHGZfV0i&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Pasta',
-        categoryImage: 'pasta.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=gPZBYc1Ds8ns&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Rice',
-        categoryImage: 'rice.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=0bX4Bs8ogwUu&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Dessert',
-        categoryImage: 'dessert.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=yfksegRPDAYS&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Soup',
-        categoryImage: 'soup.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=BewN23wCh-il&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         categoryName: 'Drink',
-        categoryImage: 'drink.jpg',
+        categoryImage: 'https://img.icons8.com/?size=48&id=g4ya0t-L-Ui_&format=png',
         createdAt: new Date(),
         updatedAt: new Date()
       }

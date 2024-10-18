@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/:id', orderController.getOrderById)
 router.put('/:id', orderController.updateStatusOrder)
-router.put('/:id/accept', orderController.acceptOrder)
+router.put('/:id/accept', orderController.acceptOrderStore)
 router.put('/:id/cancel', orderController.cancelOrder)
 router.get('/:id/total', orderController.calculateOrderTotal)
 

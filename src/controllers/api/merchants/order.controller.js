@@ -2,32 +2,36 @@ import db from '@src/models'
 const Order = db.orders
 const FoodQuantity = db.foodquantity
 
-const acceptOrder = async (req, res) => {
-  const orderId = req.params.id
+const acceptOrderStore = async (req, res) => {
+  const orderId = req.params.id;
+  const { storeId } = req.body; // Lấy storeId từ body của yêu cầu
 
   try {
     // Tìm đơn hàng theo orderId
-    const existingOrder = await Order.findByPk(orderId)
+    const existingOrder = await Order.findByPk(orderId);
 
     if (!existingOrder) {
-      return res.status(404).json({ message: 'Order not found' })
+      return res.status(404).json({ message: 'Order not found' });
     }
 
     // Kiểm tra trạng thái đơn hàng, chỉ cho phép chấp nhận nếu trạng thái là "pending"
     if (existingOrder.status !== 'pending') {
-      return res.status(400).json({ message: 'Only orders with status "pending" can be accepted.' })
+      return res.status(400).json({ message: 'Only orders with status "pending" can be accepted.' });
     }
 
-    // Cập nhật trạng thái đơn hàng thành "order received"
-    existingOrder.status = 'received'
-    const updatedOrder = await existingOrder.save()
+    // Cập nhật trạng thái đơn hàng thành "order received" và gán storeId
+    existingOrder.status = 'received';
+    existingOrder.storeId = storeId; // Gán storeId vào đơn hàng
 
-    res.status(200).json({ message: 'Order accepted successfully.', updatedOrder })
+    const updatedOrder = await existingOrder.save(); // Lưu thay đổi
+
+    res.status(200).json({ message: 'Order accepted successfully.', updatedOrder });
   } catch (error) {
-    console.error('Error accepting order:', error)
-    res.status(500).json({ message: 'Internal server error' })
+    console.error('Error accepting order:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-}
+};
+
 
 const cancelOrder = async (req, res) => {
   const orderId = req.params.id
@@ -200,11 +204,10 @@ const calculateStoreIncome = async (req, res) => {
   const storeId = req.params.id // Lấy storeId từ params
 
   try {
-    // Lấy tất cả các đơn hàng có status là 'completed'
     const orders = await Order.findAll({
       where: {
         storeId: storeId,
-        status: 'completed'
+        status: 'done'
       },
       attributes: ['createdAt'], // Chỉ lấy ngày tạo
       include: [
@@ -248,7 +251,7 @@ const calculateStoreIncome = async (req, res) => {
 }
 
 export default {
-  acceptOrder,
+  acceptOrderStore,
   cancelOrder,
   getOrders,
   getOrderById,

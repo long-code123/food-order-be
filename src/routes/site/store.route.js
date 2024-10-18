@@ -10,6 +10,7 @@ import orderController from '@src/controllers/sites/order.controller'
 const router = express.Router()
 
 router.get('/', authMiddleware, authorizeMiddleware([AppConstants.PERMISSION.SUPER_ADMIN, AppConstants.PERMISSION.ADMIN]), storeController.getStores)
+router.get('/total/income', orderController.calculateAllStoresIncome)
 router.get('/:id', authMiddleware, authorizeMiddleware([AppConstants.PERMISSION.SUPER_ADMIN, AppConstants.PERMISSION.ADMIN]), storeController.getStoreById)
 router.post('/', authMiddleware, authorizeMiddleware(['super admin']), storeController.createStore)
 router.put('/:id', authMiddleware, authorizeMiddleware(['super admin']), storeController.updateStore)
@@ -18,5 +19,4 @@ router.get('/:id/foods', foodController.getFoodsByStore)
 router.get('/:id/reviews', reviewstoreController.getReviewsByStore)
 router.get('/:id/income', orderController.calculateStoreIncome)
 router.get('/:id/orders', orderController.getOrdersByStore)
-
 export default router

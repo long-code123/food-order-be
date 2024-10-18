@@ -23,12 +23,31 @@ const createOrder = async (req, res) => {
   }
 }
 const getOrders = async (req, res) => {
-  try {
-    const allOrders = await Order.findAll()
 
-    res.status(200).json(allOrders)
+  try {
+    const orders = await Order.findAll({
+      include: [
+        {
+          model: FoodQuantity,
+          as: 'items',
+          include: [
+            {
+              model: db.foods,
+              as: 'food',
+              attributes: ['foodName', 'price']
+            }
+          ]
+        }
+      ]
+    })
+
+    if (orders.length === 0) {
+      return res.status(404).json({ message: 'No orders found for this store.' })
+    }
+
+    res.status(200).json(orders)
   } catch (error) {
-    console.error('Error getting orders:', error)
+    console.error('Error getting orders by store:', error)
     res.status(500).json({ message: 'Internal server error' })
   }
 }
@@ -255,7 +274,7 @@ const calculateOrderTotal = async (req, res) => {
             {
               model: db.foods,
               as: 'food',
-              attributes: ['price'] 
+              attributes: ['price']
             }
           ]
         }
@@ -280,7 +299,7 @@ const calculateOrderTotal = async (req, res) => {
 }
 
 const calculateStoreIncome = async (req, res) => {
-  const storeId = req.params.id;
+  const storeId = req.params.id
 
   try {
     // Tìm tất cả các đơn hàng có liên quan đến storeId
@@ -299,35 +318,35 @@ const calculateStoreIncome = async (req, res) => {
           ]
         }
       ]
-    });
+    })
 
     if (orders.length === 0) {
-      return res.status(404).json({ message: 'No orders found for this store.' });
+      return res.status(404).json({ message: 'No orders found for this store.' })
     }
 
     // Tính tổng thu nhập cho cửa hàng
-    let totalIncome = 0;
-    orders.forEach(order => {
-      order.items.forEach(item => {
+    let totalIncome = 0
+    orders.forEach((order) => {
+      order.items.forEach((item) => {
         if (item.food) {
-          totalIncome += item.food.price * item.quantity;
+          totalIncome += item.food.price * item.quantity
         }
-      });
-    });
+      })
+    })
 
-    res.status(200).json({ storeId: storeId, totalIncome: totalIncome });
+    res.status(200).json({ storeId: storeId, totalIncome: totalIncome })
   } catch (error) {
-    console.error('Error calculating store income:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error calculating store income:', error)
+    res.status(500).json({ message: 'Internal server error' })
   }
-};
+}
 
 const getOrdersByStore = async (req, res) => {
-  const storeId = req.params.id;
+  const storeId = req.params.id
 
   try {
     const orders = await Order.findAll({
-      where: { storeId: storeId }, 
+      where: { storeId: storeId },
       include: [
         {
           model: FoodQuantity,
@@ -341,18 +360,72 @@ const getOrdersByStore = async (req, res) => {
           ]
         }
       ]
-    });
+    })
 
     if (orders.length === 0) {
-      return res.status(404).json({ message: 'No orders found for this store.' });
+      return res.status(404).json({ message: 'No orders found for this store.' })
     }
 
-    res.status(200).json(orders);
+    res.status(200).json(orders)
   } catch (error) {
-    console.error('Error getting orders by store:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error getting orders by store:', error)
+    res.status(500).json({ message: 'Internal server error' })
   }
-};
+}
+
+const calculateAllStoresIncome = async (req, res) => {
+  try {
+    // Tìm tất cả các đơn hàng từ tất cả các cửa hàng
+    const orders = await Order.findAll({
+      where: {status: 'done'},
+      include: [
+        {
+          model: FoodQuantity,
+          as: 'items',
+          include: [
+            {
+              model: db.foods,
+              as: 'food',
+              attributes: ['price']
+            }
+          ]
+        }
+      ]
+    })
+
+    if (orders.length === 0) {
+      return res.status(404).json({ message: 'No orders found.' })
+    }
+
+    // Tính tổng thu nhập cho tất cả các cửa hàng
+    let totalIncome = 0
+    const storeIncomeMap = {}
+
+    orders.forEach((order) => {
+      if (!storeIncomeMap[order.storeId]) {
+        storeIncomeMap[order.storeId] = 0 // Initialize store income
+      }
+
+      order.items.forEach((item) => {
+        if (item.food) {
+          storeIncomeMap[order.storeId] += item.food.price * item.quantity
+        }
+      })
+    })
+
+    // Tổng thu nhập của tất cả các cửa hàng
+    totalIncome = Object.values(storeIncomeMap).reduce((acc, income) => acc + income, 0)
+
+    res.json({
+      message: 'Income calculated successfully',
+      totalIncome,
+      storeIncomeMap // Thu nhập cho từng cửa hàng
+    })
+  } catch (error) {
+    console.error('Error calculating income:', error)
+    res.status(500).json({ message: 'Error calculating income', error: error.message })
+  }
+}
 
 export default {
   getOrders,
@@ -365,5 +438,6 @@ export default {
   createOrderWithItems,
   calculateOrderTotal,
   calculateStoreIncome,
-  getOrdersByStore
+  getOrdersByStore,
+  calculateAllStoresIncome
 }

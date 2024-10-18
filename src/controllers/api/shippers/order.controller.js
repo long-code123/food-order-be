@@ -1,4 +1,5 @@
 import db from '@src/models'
+import { where } from 'sequelize'
 const Order = db.orders
 const FoodQuantity = db.foodquantity
 const Shipper = db.shippers
@@ -7,6 +8,7 @@ const getOrdersForShipper = async (req, res) => {
 
   try {
     const orders = await Order.findAll({
+      where: {status: 'received'},
       include: [
         {
           model: FoodQuantity,
@@ -141,9 +143,74 @@ const calculateOrderTotal = async (req, res) => {
   }
 }
 
+const acceptOrderShipper = async (req, res) => {
+  const { orderId, shipperId } = req.body;
+
+  // Kiểm tra thông tin yêu cầu
+  if (!orderId || !shipperId) {
+    return res.status(400).json({ message: 'Order ID and Shipper ID are required.' });
+  }
+
+  try {
+    // Tìm đơn hàng theo orderId
+    const existingOrder = await Order.findByPk(orderId);
+    
+    // Kiểm tra nếu đơn hàng không tồn tại
+    if (!existingOrder) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    // Kiểm tra trạng thái hiện tại của đơn hàng
+    if (existingOrder.status !== 'received') {
+      return res.status(400).json({ message: 'Order is not in received status.' });
+    }
+
+    // Cập nhật trạng thái đơn hàng thành shipping
+    existingOrder.status = 'shipping';
+    existingOrder.shipperId = shipperId; // Gán shipperId
+    const updatedOrder = await existingOrder.save(); // Lưu thay đổi
+
+    res.status(200).json({ message: 'Order status updated to shipping successfully.', updatedOrder });
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+const orderDone = async (req, res) => {
+  const orderId = req.params.id;
+
+  try {
+    // Tìm đơn hàng theo orderId
+    const existingOrder = await Order.findByPk(orderId);
+
+    if (!existingOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Kiểm tra trạng thái đơn hàng, chỉ cho phép cập nhật nếu trạng thái là "shipping"
+    if (existingOrder.status !== 'shipping') {
+      return res.status(400).json({ message: 'Only orders with status "shipping" can be marked as done.' });
+    }
+
+    // Cập nhật trạng thái đơn hàng thành "done"
+    existingOrder.status = 'done';
+    const updatedOrder = await existingOrder.save();
+
+    res.status(200).json({ message: 'Order marked as done successfully.', updatedOrder });
+  } catch (error) {
+    console.error('Error marking order as done:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
 export default {
   getOrdersForShipper,
   getOrderById,
   getOrderByShipper,
-  calculateOrderTotal
+  calculateOrderTotal,
+  orderDone,
+  acceptOrderShipper
 }
